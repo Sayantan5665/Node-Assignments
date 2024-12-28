@@ -12,6 +12,8 @@ export interface IUser extends Document {
     isActive: boolean;
     confirmPassword?: string;
     timeZone: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export interface ITokenUser {
