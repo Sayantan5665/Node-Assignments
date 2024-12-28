@@ -1,0 +1,77 @@
+.sidenav {
+  height: 100%;
+  width: 100%;
+  background-color: beige;
+  border-radius: 20px;
+  padding: 10px;
+
+
+  /* Profile Section */
+  .profile {
+    text-align: center;
+    margin-bottom: 20px;
+
+    img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.2);
+      object-fit: cover;
+    }
+
+    h3 {
+      margin: 0px auto;
+      font-size: 18px;
+    }
+
+    p {
+      margin: 0px auto;
+      font-size: 14px;
+      color: #64671b;
+    }
+  }
+
+  /* Menu Section */
+  .menu {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+    height: calc(100% - 170px);
+    overflow-y: auto;
+    -ms-overflow-style: none; // IE and Edge
+    scrollbar-width: none;  // Firefox
+    &::-webkit-scrollbar {
+      display: none;
+      /* Hide scrollbar */
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+      padding: 15px 20px;
+      cursor: pointer;
+      background-color: #b6c43634;
+      transition: background-color 0.3s ease;
+      border-radius: 20px;
+
+      &:hover {
+        background-color: #798323;
+        color: white;
+        font-size: 16px;
+      }
+
+      &.active {
+        background-color: #798323;
+        color: white;
+        font-size: 16px;
+      }
+      &.active1 {
+        background-color: #798323;
+        color: white;
+        font-size: 16px;
+      }
+    }
+  }
+}
+

@@ -1,0 +1,111 @@
+<div class="add-product-form">
+  <div class="form-container">
+    <div class="title">
+      <h5>Edit Product</h5>
+    </div>
+    <form [formGroup]="form" id="update-product-form">
+      <div class="input-field mb-3">
+        <div class="file-container" [class.error-div]="form.controls['imageArr'] && form.controls['imageArr'].touched && images.length < 1">
+          <div class="file-upload-container">
+            <input type="file" id="file-upload" [multiple]="true" class="file-input"
+              accept="image/png, image/gif, image/jpeg, image/svg+xml" formControlName="imageArr"
+              (change)="handleImages($event)" />
+            <label for="file-upload" class="upload-label" style="cursor: pointer;">
+              <div class="upload-icon">
+                <i class="fas fa-cloud-upload-alt"></i> <!-- Font Awesome icon -->
+              </div>
+              <span>Browse file to upload</span>
+            </label>
+          </div>
+          @for (file of images; track file) {
+          <div class="uploaded-file">
+            <div class="img-name">
+              <img [src]="file.url" alt="">
+              <p class="file-name">{{file.file.name || file.url}}</p>
+            </div>
+            <button type="button" class="btn" (click)="removeImage( $index, file.file)"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          }
+        </div>
+        <div class="error-msg">
+          @if(form.controls['imageArr'] && form.controls['imageArr'].touched && images.length < 1) {
+            <p>Upload atleast one image.</p>
+          }
+        </div>
+      </div>
+
+      <div class="input-field mb-3">
+        <div class="input-group" [class.error-div]="form.controls['name'].touched && form.controls['name'].hasError('required')">
+          <span class="input-group-text"><i class="fa-solid fa-file-signature"></i></span>
+          <div class="form-floating">
+            <input type="text" class="form-control" id="prodName" placeholder="Enter product name"
+              formControlName="name">
+            <label for="prodName">Name*</label>
+          </div>
+        </div>
+        <div class="error-msg">
+          @if(form.controls['name'].touched && form.controls['name'].hasError('required')) {
+          <p>Name is required</p>
+          }
+        </div>
+      </div>
+
+      <div class="row g-2  mb-3">
+        <div class="input-field col-md">
+          <div class="input-group" [class.error-div]="form.controls['price'].touched && (form.controls['price'].hasError('required') || form.controls['price'].hasError('mask'))">
+            <span class="input-group-text">₹</span>
+            <div class="form-floating">
+              <input type="text" class="form-control" id="price" placeholder="Enter product price"
+                formControlName="price" [mask]="'0*.99'">
+              <label for="price">Price*</label>
+            </div>
+          </div>
+          <div class="error-msg">
+            @if(form.controls['price'].touched && form.controls['price'].hasError('required')) {
+            <p>Price is required</p>
+            }
+            @if(form.controls['price'].touched && form.controls['price'].hasError('mask')) {
+            <p>Only number is allowed</p>
+            }
+          </div>
+        </div>
+
+        <div class="col-md input-field">
+          <div class="input-group">
+            <span class="input-group-text"><i class="fa-solid fa-wand-sparkles"></i></span>
+            <div class="form-floating">
+              <select class="form-select" id="productType" formControlName="product_type">
+                <option disabled>Select product type (New/Used)</option>
+                <option value="New">New</option>
+                <option value="Used">Used</option>
+              </select>
+              <label for="productType">Product type</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="input-field mb-3">
+        <div class="input-group" [class.error-div]="form.controls['description'].touched && (form.controls['description'].hasError('required') || form.controls['description'].hasError('minlength'))">
+          <span class="input-group-text"><i class="fa-solid fa-pen-to-square"></i></span>
+          <div class="form-floating">
+            <textarea class="form-control" placeholder="Product Description" id="productDesc" style="height: 100px"
+              formControlName="description" minlength="20"></textarea>
+            <label for="productDesc">Description*</label>
+          </div>
+        </div>
+        <div class="error-msg">
+          @if(form.controls['description'].touched && form.controls['description'].hasError('required')) {
+          <p>Description is required</p>
+          }
+          @if(form.controls['description'].touched && form.controls['description'].hasError('minlength')) {
+          <p>Description must have atleast 20 characters</p>
+          }
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-primary px-5" (click)="updateProduct()">Update</button>
+    </form>
+  </div>
+</div>

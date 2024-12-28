@@ -1,0 +1,143 @@
+<%- include('../../layouts/head.ejs') %>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+
+    <!-- Preloader -->
+    <%- include('../../layouts/loader.ejs') %>
+    <!-- /.Preloader -->
+
+    <!-- Navbar -->
+    <%- include('../../layouts/navbar.ejs') %>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <%- include('../../layouts/sidebar.ejs') %>
+    <!-- /.Main Sidebar Container -->
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+
+      <!-- Flash message -->
+      <% if (messages.length != 0) { %>
+      <div class="position-absolute" style="width: calc(100% - 250px);">
+        <div class="alert alert-<%=messages[1]%> alert-dismissible fade show float-right w-50" style="z-index: 999;" id="teamAlert" role="alert">
+          <%= messages[0] %>
+          <button type="button" class="close" id="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+      <% } %>
+      <!-- Flash message end -->
+
+
+      <!-- Content Header (breadcrump) -->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0">Our Teams</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a>Our Teams</a></li>
+              </ol>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="container-fluid">
+
+          <form>
+            <h3 style="text-align: center; text-decoration: underline;">Our Teams</h3>
+            <label for="exampleFormControlInput1" class="form-label">Team Description</label>
+
+            <div class="our-team-desc">
+              <input type="text" class="description form-control" name="heading" value="<%= data.ourTeam.description %>" disabled>
+              <a href="/about-us/our-team/update/<%= data.ourTeam.id %>" class="btn btn-primary" style="margin-left: 10px;">Edit%></a>
+            </div>
+          </form>
+
+          <div class="our-team">
+            <a href="/about-us/our-team/members/add" class="btn btn-info"> Add Team Member</a>
+            <table class="table mt-2">
+              <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col">Image</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Designation</th>
+                  <th scope="col">Status</th>
+                  <th scope="col" style="max-width: 100px;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% data.memberList.forEach((member, index)=> {%>
+                <tr>
+                  <th scope="row"> <%= index+1 %> </th>
+                  <td style="padding-bottom: 0.36rem;"><img style="height: 50px; width: 50px;" src="<%= member.image %>" alt=""></td>
+                  <td style="padding-bottom: 0.36rem;"> <%= member.name %> </td>
+                  <td style="padding-bottom: 0.36rem; "> <%= member.designation %> </td>
+                  <td style="padding-bottom: 0.36rem;"><a href="/about-us/our-team/members/active-deactive/<%= member._id %>" class="btn <%= member.isActive ? 'btn-success' : 'btn-warning' %>">
+                      <%= member.isActive ? 'Active' : 'Deactive' %>
+                    </a></td>
+                  <td style="padding-bottom: 0.36rem; display: flex; max-width: 100px;">
+                    <a href="/about-us/our-team/members/update/<%= member._id %>" class="btn btn-primary" style="margin-right: 10px;">Edit</a>
+                    <a class="btn btn-danger" onclick="deleteBanner('<%= member._id %>')"> Delete</a>
+                  </td>
+                </tr>
+                <% }) %>
+
+              </tbody>
+            </table>
+          </div>
+
+        </div><!-- /.container-fluid -->
+      </section>
+      <!-- /. Main content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- footer -->
+    <%- include('../../layouts/footer.ejs') %>
+    <!-- /.footer -->
+
+  </div>
+  <!-- ./wrapper -->
+
+
+
+  <script>
+    function deleteBanner(id) {
+      if (confirm('Are you sure you want to delete this banner?')) {
+        fetch(`/about-us/our-team/members/delete/${id}`, {
+          method: 'DELETE'
+        }).then(response => {
+          location.reload(); // Reload to reflect changes
+          console.log("response: ", response);
+        }).catch(error => console.error('Error:', error));
+      }
+    }
+
+
+    // +======= for connect-flash message ========+
+    function vanish() {
+      $('#teamAlert').fadeOut('fast');
+    }
+    $("#close").click(vanish)
+    $(document).ready(function() {
+      setTimeout(function() {
+        vanish()
+      }, 3000);
+    });
+  </script>
+</body>
+
+</html>

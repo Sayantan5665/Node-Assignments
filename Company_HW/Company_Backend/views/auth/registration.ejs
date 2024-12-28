@@ -1,0 +1,129 @@
+<%- include('../layouts/head.ejs') %>
+
+
+<body style="font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #ff9a9e, #fad0c4); height: 100vh; margin: 0; display: flex; justify-content: center; align-items: center;">
+
+  <!-- Flash message -->
+  <% if (messages.length != 0) { %>
+  <div class="position-absolute" style="width: 100%; top: 0;">
+    <div class="alert alert-<%=messages[1]%> alert-dismissible fade show float-right" style="z-index: 999; width: 40%;" id="teamAlert" role="alert">
+      <%= messages[0] %>
+      <button type="button" class="close" id="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+  <% } %>
+
+
+  <div style="background-color: white; padding: 30px; width: 700px; border-radius: 10px; box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1); text-align: center;">
+    <h2 style="margin-bottom: 20px; color: #333;">Create an Account</h2>
+
+    <form action="/user/registration" method="post" enctype="multipart/form-data">
+      <!-- User Image Upload -->
+      <div style="margin-bottom: 15px;">
+        <!-- <label for="user-image" style="display: block; font-size: 14px; color: #555;">Upload Profile Picture</label> -->
+        <input type="file" id="user-image" accept="image/*" onchange="previewImage()" style="display: none;" name="image">
+        <div style="position: relative;">
+          <img id="image-preview" src="http://localhost:5100/assets/profile-pic-placeholder.png" alt="Profile Picture" style="border-radius: 50%; width: 100px; height: 100px; object-fit: cover; margin-bottom: 10px; cursor: pointer;" onclick="document.getElementById('user-image').click();">
+        </div>
+      </div>
+
+      <!-- name -->
+      <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+        <input type="text" placeholder="First Name" style="width: 48%; padding: 5px 10px; border: 1px solid #ccc; border-radius: 5px;" name="first_name" required>
+        <input type="text" placeholder="Last Name" style="width: 48%; padding: 5px 10px; border: 1px solid #ccc; border-radius: 5px;" name="last_name" required>
+      </div>
+
+
+      <!-- email -->
+      <input type="email" placeholder="Email" style="width: 100%; padding: 5px 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;" name="email" required>
+
+      <!-- password -->
+      <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+        <div style="position: relative; width: 48%;">
+          <input type="password" id="password" placeholder="Password" style="width: 100%; padding: 5px 10px; border: 1px solid #ccc; border-radius: 5px;" name="password" required>
+          <button type="button" onclick="togglePassword('password', 'toggleBtn')" id="toggleBtn" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 14px; cursor: pointer;"><i class="fa fa-eye" aria-hidden="true"></i></button>
+        </div>
+
+        <div style="position: relative; width: 48%;">
+          <input type="password" id="confirm-password" placeholder="Confirm Password" style="width: 100%; padding: 5px 10px; border: 1px solid #ccc; border-radius: 5px;" name="confirmPassword" required>
+          <button type="button" onclick="togglePassword('confirm-password', 'toggleBtnConfirm')" id="toggleBtnConfirm" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 14px; cursor: pointer;"><i class="fa fa-eye" aria-hidden="true"></i></button>
+        </div>
+      </div>
+
+      <!-- Hint Question / Answer -->
+      <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+        <select style="width: 48%; padding: 5px 10px;  border: 1px solid #ccc; border-radius: 5px;" name="hint[question]" required>
+          <option disabled selected>Select a Hint Question</option>
+          <option value="What is your pet's name?">What is your pet's name?</option>
+          <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
+          <option value="What was your first car?">What was your first car?</option>
+          <option value="What city were you born in?">What city were you born in?</option>
+        </select>
+        <input type="text" placeholder="Hint Answer" style="width: 48%; padding: 5px 10px; border: 1px solid #ccc; border-radius: 5px;" name="hint[answer]" required>
+      </div>
+
+
+      <button type="submit" style="width: 100%; padding: 5px 10px; background-color: #ff9a9e; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">Register</button>
+    </form>
+
+    <p style="margin-top: 20px; color: #777;">Already have an account? <a href="/login" style="color: #ff9a9e; text-decoration: none;">Login here</a></p>
+  </div>
+
+
+  <script>
+    // +======= show/hide password ========+
+    function togglePassword(fieldId, toggleBtnId) {
+      const passwordField = document.getElementById(fieldId);
+      const toggleBtn = document.getElementById(toggleBtnId);
+
+      if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        toggleBtn.innerHTML = `<i class="fa fa-eye-slash" aria-hidden="true"></i>`;
+      } else {
+        passwordField.type = 'password';
+        toggleBtn.innerHTML = `<i class="fa fa-eye" aria-hidden="true"></i>`;
+      }
+    }
+
+    // +======= preview image for user ========+
+    function previewImage() {
+      const file = document.getElementById('user-image').files[0];
+      const preview = document.getElementById('image-preview');
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = function() {
+          preview.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // +======= for connect-flash message ========+
+    vanish();
+    function vanish() {
+      $('#teamAlert').fadeOut('fast');
+    }
+    $("#close").click(vanish)
+    $(document).ready(function() {
+      setTimeout(function() {
+        vanish()
+      }, 3000);
+    });
+  </script>
+
+  <!-- jQuery -->
+  <script src="/plugins/jquery/jquery.min.js"></script>
+  <!-- jQuery UI 1.11.4 -->
+  <script src="/plugins/jquery-ui/jquery-ui.min.js"></script>
+  <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+  <script>
+    $.widget.bridge('uibutton', $.ui.button)
+  </script>
+  <!-- Bootstrap 4 -->
+  <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

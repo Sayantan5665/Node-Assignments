@@ -1,0 +1,73 @@
+<%- include('../layouts/head.ejs') %>
+
+<body style="font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #6e8efb, #a777e3); height: 100vh; margin: 0; display: flex; justify-content: center; align-items: center;">
+  <!-- Flash message -->
+  <% if (messages.length != 0) { %>
+  <div class="position-absolute" style="width: 100%; top: 0;">
+    <div class="alert alert-<%=messages[1]%> alert-dismissible fade show float-right" style="z-index: 999; width: 40%;" id="teamAlert" role="alert">
+      <%= messages[0] %>
+      <button type="button" class="close" id="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+  <% } %>
+
+  <div style="background-color: white; padding: 40px; width: 350px; border-radius: 10px; box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1); text-align: center;">
+    <h2 style="margin-bottom: 20px; color: #333;">Login</h2>
+
+    <form action="/user/login" method="post">
+      <input type="email" placeholder="Email" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;" name="email" required>
+      <div style="position: relative; margin-bottom: 20px;">
+        <input type="password" id="password" placeholder="Password" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;" name="password" required>
+        <button type="button" onclick="togglePassword('password', 'toggleBtn')" id="toggleBtn" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 14px; cursor: pointer;"><i class="fa fa-eye" aria-hidden="true"></i></button>
+      </div>
+
+      <button type="submit" style="width: 100%; padding: 10px; background-color: #6e8efb; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">Login</button>
+    </form>
+
+    <p style="margin-top: 20px; color: #777;">Don't have an account? <a href="/registration" style="color: #6e8efb; text-decoration: none;">Register here</a></p>
+  </div>
+
+  <script>
+    function togglePassword(fieldId, toggleBtnId) {
+      const passwordField = document.getElementById(fieldId);
+      const toggleBtn = document.getElementById(toggleBtnId);
+
+      if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        toggleBtn.innerHTML = `<i class="fa fa-eye-slash" aria-hidden="true"></i>`;
+      } else {
+        passwordField.type = 'password';
+        toggleBtn.innerHTML = `<i class="fa fa-eye" aria-hidden="true"></i>`;
+      }
+    }
+
+    // +======= for connect-flash message ========+
+    function vanish() {
+      $('#teamAlert').fadeOut('fast');
+    }
+    $("#close").click(vanish)
+    $(document).ready(function() {
+      console.log("Document is ready"); // Debugging line
+      setTimeout(function() {
+        console.log("Timeout reached, calling vanish"); // Debugging line
+        vanish()
+      }, 3000);
+    });
+  </script>
+
+  <!-- jQuery -->
+  <script src="/plugins/jquery/jquery.min.js"></script>
+  <!-- jQuery UI 1.11.4 -->
+  <script src="/plugins/jquery-ui/jquery-ui.min.js"></script>
+  <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+  <script>
+    $.widget.bridge('uibutton', $.ui.button)
+  </script>
+  <!-- Bootstrap 4 -->
+  <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+
+
+</html>

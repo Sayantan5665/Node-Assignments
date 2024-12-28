@@ -1,0 +1,32 @@
+<nav class="navbar navbar-expand-lg" style="background-color: #f5e1a7;">
+
+  <div class="container-fluid _container">
+    <a class="navbar-brand" [routerLink]="['/']" routerLinkActive="router-link-active">RBAC</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        @if (isLoggedIn()) {
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" (click)="openClose()">
+            <i class="fa-solid fa-bars rotating-element"></i>
+          </a>
+        </li>
+        }
+      </ul>
+      @if(isBrowser) {
+      @if (!isLoggedIn()) {
+      <button class="btn btn-outline-success" type="submit" [routerLink]="'/login'">Login</button>
+      } @else {
+      <div class="user-detail">
+        <img [src]="user?.image" alt="">
+        <p>{{user?.name}}</p>
+      </div>
+      }
+      }
+    </div>
+  </div>
+
+</nav>

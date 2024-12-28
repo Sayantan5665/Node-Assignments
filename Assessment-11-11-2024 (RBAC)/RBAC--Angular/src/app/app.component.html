@@ -1,0 +1,6 @@
+@defer (when pageLoad()) {
+<div class="main-container">
+  <app-header (sidenav)="sidenavOpenClose($event)"></app-header>
+  <router-outlet />
+</div>
+}

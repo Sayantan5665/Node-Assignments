@@ -1,0 +1,49 @@
+// ***** highlight active tab: https://stackoverflow.com/questions/18501402/finding-current-url-inside-ejs-view-when-using-express
+
+index.js
+----------
+/* object menu */
+const menu = [
+    {
+        name: 'Home',
+        url: '/'
+    },
+    {
+        name: 'About',
+        url: '/about'
+    }
+]
+
+/* route */
+app.get( '/', function( request, response) {
+
+    let data = {
+    title: 'Home',
+    url: request.url,
+    menu: menu
+    }
+
+    response.render( 'home', data )
+} );
+
+app.get( '/about', function( request, response) {
+
+    let data = {
+    title: 'About',
+    url: request.url,
+    menu: menu
+    }
+
+    response.render( 'about', data )
+} );
+
+menu.js
+----------
+<% for ( let i in menu ) { %> // loop menu
+    <% if ( menu[i].url == url ) { %> // match, add active in class
+        <a class="active" href="<%= menu[i].url %>" ><%= menu[i].name %></a>
+    <% } else { %>
+        <a class="" href="<%= menu[i].url %>" ><%= menu[i].name %></a>
+    <% } %>
+<% } %>
+// **** highlight active tab end

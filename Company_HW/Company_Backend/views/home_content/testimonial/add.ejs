@@ -1,0 +1,111 @@
+<%- include('../../layouts/head.ejs') %>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+
+    <!-- Preloader -->
+    <%- include('../../layouts/loader.ejs') %>
+    <!-- /.Preloader -->
+
+    <!-- Navbar -->
+    <%- include('../../layouts/navbar.ejs') %>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <%- include('../../layouts/sidebar.ejs') %>
+    <!-- /.Main Sidebar Container -->
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+
+
+      <!-- Flash message -->
+      <% if (messages.length != 0) { %>
+      <div class="position-absolute" style="width: calc(100% - 250px);">
+        <div class="alert alert-<%=messages[1]%> alert-dismissible fade show float-right w-50" style="z-index: 999;" id="testimonialAlert" role="alert">
+          <%= messages[0] %>
+          <button type="button" class="close" id="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+      <% } %>
+      <!-- Flash message end -->
+
+      <!-- Content Header (breadcrump) -->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0">Testimonial</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="/home/testimonial">Testimonial</a></li>
+                <li class="breadcrumb-item active">Add</li>
+              </ol>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="container-fluid">
+
+          <form action="/home/testimony/create" method="post" enctype="multipart/form-data">
+            <h3 style="text-align: center; text-decoration: underline;">Add Testimony</h3>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Image</label>
+              <input type="file" class="form-control" name="image">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Name</label>
+              <input type="text" class="form-control" placeholder="Enter title" name="name">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Designation</label>
+              <input type="text" class="form-control" placeholder="Enter Content" name="designation">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Content</label>
+              <input type="text" class="form-control" placeholder="Enter Content" name="content">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Add</button>
+          </form>
+
+        </div><!-- /.container-fluid -->
+      </section>
+      <!-- /. Main content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- footer -->
+    <%- include('../../layouts/footer.ejs') %>
+    <!-- /.footer -->
+
+  </div>
+  <!-- ./wrapper -->
+
+  <!-- for connect-flash -->
+  <script>
+    function vanish() {
+      $('#testimonialAlert').fadeOut('fast');
+    }
+
+    $("#close").click(vanish)
+
+    $(document).ready(function() {
+      setTimeout(function() {
+        vanish()
+      }, 3000);
+    });
+  </script>
+  <!-- for connect-flash end -->
+</body>
+
+</html>

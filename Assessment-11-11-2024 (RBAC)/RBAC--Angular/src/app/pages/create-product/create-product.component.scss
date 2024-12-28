@@ -1,0 +1,122 @@
+.add-product-form {
+  height: 100%;
+  width: 100%;
+  border: 1px solid #5e5e5e;
+  border-radius: 20px;
+  overflow: auto;
+  padding: 20px;
+  text-align: center;
+  -ms-overflow-style: none; // IE and Edge
+  scrollbar-width: none; // Firefox
+
+  &::-webkit-scrollbar {
+    display: none;
+    /* Hide scrollbar */
+  }
+
+  .title {
+    border-bottom: 1px solid #5e5e5e;
+    margin-bottom: 10px;
+  }
+
+  .file-container {
+    width: 100%;
+    min-height: 100px;
+
+    .file-upload-container {
+      width: 100%;
+      height: 100px;
+      border: 1px solid #dadada;
+      background-color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+      border-radius: 5px;
+
+      /* Hide the default file input */
+      .file-input {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+      }
+
+      .upload-label {
+        text-align: center;
+        color: #cdcdcd;
+        /* Light blue text */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .upload-icon {
+          font-size: 40px;
+          color: #cdcdcd;
+          /* Light blue icon color */
+          margin-bottom: 10px;
+        }
+
+        span {
+          font-size: 16px;
+          color: #2a2a2a;
+        }
+      }
+
+      &:hover {
+
+        // border-color: #7ea6e0;
+        .upload-label {
+          color: #bababa;
+
+          .upload-icon {
+            color: #bababa;
+          }
+
+          span {
+            color: #000;
+          }
+        }
+      }
+    }
+
+    .uploaded-file {
+      margin-top: 5px;
+      width: 100%;
+      height: 40px;
+      border: 1px solid #dadada;
+      border-radius: 5px;
+      background-color: #fffef7;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px;
+
+      .img-name {
+        display: flex;
+        align-items: center;
+        img {
+          height: 30px;
+          width: 30px;
+          border-radius: 5px;
+        }
+        p {
+          font-size: 12px;
+          color: #414141;
+          margin-left: 10px;
+        }
+      }
+
+      button {
+        &:active, &:focus {
+          border: none;
+        }
+        &:hover {
+          color: #ffa9a9;
+        }
+      }
+    }
+  }
+
+}

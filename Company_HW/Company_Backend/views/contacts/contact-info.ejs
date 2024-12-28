@@ -1,0 +1,239 @@
+<%- include('../layouts/head.ejs') %>
+<style>
+  /* Align buttons to the right side of the label */
+  .form-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .float-right {
+    margin-left: 10px;
+    /* Optional: Adds some space between the label and the button */
+  }
+
+  .btn-sm {
+    padding: 0.25rem 0.5rem;
+    /* Smaller button size */
+  }
+
+  .contact-info-remove-btn {
+    margin-left: 10px;
+  }
+</style>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+
+    <!-- Preloader -->
+    <%- include('../layouts/loader.ejs') %>
+    <!-- /.Preloader -->
+
+    <!-- Navbar -->
+    <%- include('../layouts/navbar.ejs') %>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <%- include('../layouts/sidebar.ejs') %>
+    <!-- /.Main Sidebar Container -->
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+
+      <!-- Flash message -->
+      <% if (messages.length !=0) { %>
+      <div class="position-absolute" style="width: calc(100% - 250px);">
+        <div class="alert alert-<%=messages[1]%> alert-dismissible fade show float-right w-50" style="z-index: 999;" id="contactInfoAlert" role="alert">
+          <%= messages[0] %>
+          <button type="button" class="close" id="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+      <% } %>
+      <!-- Flash message end -->
+
+      <!-- Content Header (breadcrump) -->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0">Contact Info</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                <li class="breadcrumb-item active"><a>Contact Info</a></li>
+              </ol>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="container-fluid">
+
+          <a class="btn btn-info" id="editContatactInfoBtn">Edit</a>
+
+          <form action="/contacts/contact-info/change" method="post" enctype="application/x-www-form-urlencoded">
+            <h3 style="text-align: center; text-decoration: underline;">Contact Info
+            </h3>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Address</label>
+              <input type="text" class="form-control" id="contactInfoAddress" name="address" value="<%= data.contactInfo.address %>">
+            </div>
+
+            <div class="mb-3" id="contactInfoLongitude">
+              <label for="exampleFormControlInput1" class="form-label">Longitude</label>
+              <input type="text" class="form-control" value="<%= data.contactInfo.lng %>" disabled>
+            </div>
+            <div class="mb-3" id="contactInfoLatitude">
+              <label for="exampleFormControlInput1" class="form-label">Latitude</label>
+              <input type="text" class="form-control" value="<%= data.contactInfo.lat %>" disabled>
+            </div>
+
+            <!-- Dynamic Email Fields -->
+            <div class="mb-3" id="contactInfoEmails">
+              <label for="contactInfoEmail" class="form-label">Emails
+                <!-- Align button to the right -->
+                <button type="button" class="btn btn-success btn-sm float-right contact-info-add-btn" id="addEmailBtn">Add Email</button>
+              </label>
+              <div id="emailFields">
+                <div class="input-group mb-2">
+                  <input type="email" class="form-control contactInfoEmail" name="emails[0]" value="<%= data.contactInfo.emails?.length ? data.contactInfo.emails[0] : '' %>" required>
+                </div>
+                <% data.contactInfo.emails?.forEach(function(email, index) { %>
+                  <% if (index > 0) { %>
+                    <div class="input-group mb-2">
+                      <input type="email" class="form-control contactInfoEmail" name="emails[<%= index %>]" value="<%= email %>" required>
+                      <button type="button" class="btn btn-danger ms-3 remove-email-btn contact-info-remove-btn">Remove</button>
+                    </div>
+                  <% } %>
+                <% }) %>
+              </div>
+            </div>
+
+            <!-- Dynamic Phone Fields -->
+            <div class="mb-3" id="contactInfoPhones">
+              <label for="contactInfoPhone" class="form-label">Phones
+                <!-- Align button to the right -->
+                <button type="button" class="btn btn-success btn-sm float-right contact-info-add-btn" id="addPhoneBtn">Add Phone</button>
+              </label>
+              <div id="phoneFields">
+                <div class="input-group mb-2">
+                  <input type="text" class="form-control contactInfoPhone" name="phones[0]" value="<%= data.contactInfo.phones?.length ? data.contactInfo.phones[0] : '' %>" required>
+                </div>
+                <% data.contactInfo.phones?.forEach(function(phone, index) { %>
+                  <% if (index > 0) { %>
+                    <div class="input-group mb-2">
+                      <input type="text" class="form-control contactInfoPhone" name="phones[<%= index %>]" value="<%= phone %>" required>
+                      <button type="button" class="btn btn-danger ms-3 remove-phone-btn contact-info-remove-btn">Remove</button>
+                    </div>
+                  <% } %>
+                <% }) %>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary mb-5" id="updateContactInfoBtn">Update</button>
+
+          </form>
+
+        </div><!-- /.container-fluid -->
+      </section>
+      <!-- /. Main content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- footer -->
+    <%- include('../layouts/footer.ejs') %>
+    <!-- /.footer -->
+
+  </div>
+  <!-- ./wrapper -->
+
+
+  <script>
+    // Disable/enable input fields
+    const editBtn = $('#editContatactInfoBtn');
+    const address = $('#contactInfoAddress');
+    const emails = $('.contactInfoEmail');
+    const phone = $('.contactInfoPhone');
+    const updateBtn = $('#updateContactInfoBtn');
+    const longitude = $('#contactInfoLongitude');
+    const latitude = $('#contactInfoLatitude');
+    $(document).ready(function() {
+      address.attr('disabled', true);
+      emails.attr('disabled', true);
+      phone.attr('disabled', true);
+      updateBtn.hide();
+      $('.contact-info-add-btn').hide();
+      $('.contact-info-remove-btn').hide();
+    });
+    editBtn.click(() => {
+      address.removeAttr('disabled');
+      emails.removeAttr('disabled');
+      phone.removeAttr('disabled');
+      editBtn.fadeOut();
+      updateBtn.fadeIn();
+      longitude.hide();
+      latitude.hide();
+      $('.contact-info-add-btn').show();
+      $('.contact-info-remove-btn').show();
+    });
+
+
+
+    // Add/remove email and phone fields dynamically
+    let emailIndex = 1;
+    let phoneIndex = 1;
+    $(document).ready(function() {
+
+      $('#addEmailBtn').click(function() {
+        $('#emailFields').append(`
+          <div class="input-group mb-2">
+            <input type="email" class="form-control" name="emails[${emailIndex}]" required>
+            <button type="button" class="btn btn-danger remove-email-btn contact-info-remove-btn">Remove</button>
+          </div>
+        `);
+        emailIndex++;
+      });
+
+      $(document).on('click', '.remove-email-btn', function() {
+        $(this).parent().remove();
+      });
+
+      $('#addPhoneBtn').click(function() {
+        $('#phoneFields').append(`
+          <div class="input-group mb-2">
+            <input type="text" class="form-control" name="phones[${phoneIndex}]" required>
+            <button type="button" class="btn btn-danger remove-phone-btn contact-info-remove-btn">Remove</button>
+          </div>
+        `);
+        phoneIndex++;
+      });
+
+      $(document).on('click', '.remove-phone-btn', function() {
+        $(this).parent().remove();
+      });
+    });
+
+
+
+
+    // For flash message
+    function vanish() {
+      $('#contactInfoAlert').fadeOut('fast');
+    }
+    $("#close").click(vanish)
+    $(document).ready(function() {
+      setTimeout(function() {
+        vanish()
+      }, 3000);
+    });
+  </script>
+</body>
+
+</html>

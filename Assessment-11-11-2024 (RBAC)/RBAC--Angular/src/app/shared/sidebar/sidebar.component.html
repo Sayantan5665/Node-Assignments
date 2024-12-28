@@ -1,0 +1,13 @@
+<div class="sidenav">
+  <div class="profile">
+    <img [src]="user?.image ? user.image : 'image/blank-profile-pic.jpg'" />
+    <h3>{{user.name | titlecase}}</h3>
+    <p>{{user.role | titlecase}}</p>
+  </div>
+  <ul class="menu">
+    <li [routerLink]="['/home']" routerLinkActive="active"  [class.active1]="isProductEditActive()">Products</li>
+    <li [routerLink]="['/add/product']" routerLinkActive="active">Add Product</li>
+    <li [routerLink]="['/profile/'+user?.id]" routerLinkActive="active">Profile</li>
+    <li (click)="logout()">Logout</li>
+  </ul>
+</div>

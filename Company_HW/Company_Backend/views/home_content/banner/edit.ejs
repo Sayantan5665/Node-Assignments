@@ -1,0 +1,81 @@
+<%- include('../../layouts/head.ejs') %>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+
+    <!-- Preloader -->
+    <%- include('../../layouts/loader.ejs') %>
+    <!-- /.Preloader -->
+
+    <!-- Navbar -->
+    <%- include('../../layouts/navbar.ejs') %>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <%- include('../../layouts/sidebar.ejs') %>
+    <!-- /.Main Sidebar Container -->
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+
+      <!-- Content Header (breadcrump) -->
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0">Banner</h1>
+            </div><!-- /.col -->
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="/home/banner">Banner</a></li>
+                <li class="breadcrumb-item active">Edit</li>
+              </ol>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+      </div>
+      <!-- /.content-header -->
+
+      <!-- Main content -->
+      <section class="content">
+        <div class="container-fluid">
+
+          <!-- <a href="/home/banner" class="btn btn-info"> Back</a> -->
+          <form action="/home/banner/edit/<%= data.banner._id %>" method="post" enctype="multipart/form-data">
+            <h3 style="text-align: center; text-decoration: underline;">Update Banner</h3>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Title</label>
+              <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="title" value="<%= data.banner.title %>">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Content</label>
+              <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="content" value="<%= data.banner.content %>">
+
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Image</label>
+              <input type="file" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="image">
+
+            </div>
+
+
+            <button type="submit" class="btn btn-primary">Update</button>
+          </form>
+
+        </div><!-- /.container-fluid -->
+      </section>
+      <!-- /. Main content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- footer -->
+    <%- include('../../layouts/footer.ejs') %>
+    <!-- /.footer -->
+
+  </div>
+  <!-- ./wrapper -->
+</body>
+
+</html>

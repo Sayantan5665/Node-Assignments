@@ -1,0 +1,89 @@
+@let _editing = editing();
+<div class="profile-container">
+  <div class="title">
+    <div></div>
+    <h5>Profile</h5>
+    <button class="btn btn-sm editBtn" [class]="_editing ? 'btn-danger' : 'btn-warning'" (click)="editing.set(!_editing)"><i class="fa-regular fa-pen-to-square"></i> {{_editing ? 'Cancel' : 'Edit'}}</button>
+  </div>
+  <div class="profile-info">
+    <form [formGroup]="form" id="update-user-form">
+      <div class="field-container">
+        <div class="profile-left-container">
+          <div class="input-field upload-profile-img">
+            <div class="profile-pic-wrap">
+              <input type="file" id="profileImage" (change)="handleImageUpload($event)" accept="image/*" [disabled]="!_editing" />
+              @if (profileImage) {
+              <img class="profile-pic preview" [src]="profileImage" alt="Profile Preview" />
+              } @else {
+              <img class="profile-pic" [src]="profileImage ? profileImage : 'image/blank-profile-pic.jpg'" alt="img placeholder">
+              }
+              <mat-icon class="verifed-mark" matTooltip="Verifed Account" matTooltipPosition="right">verified</mat-icon>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-right-container">
+          <div class="input-field mb-3">
+            <div class="input-group"
+              [class.error-div]="form.controls['name'] && form.controls['name'].touched && form.controls['name'].hasError('required')">
+              <span class="input-group-text"><i class="fa-solid fa-file-signature"></i></span>
+              <div class="form-floating">
+                <input type="text" class="form-control" id="prodName" placeholder="Enter your name"
+                  formControlName="name">
+                <label for="prodName">Name</label>
+              </div>
+            </div>
+            <div class="error-msg">
+              @if(form.controls['name'] && form.controls['name'].touched && form.controls['name'].hasError('required'))
+              {
+              <p>Name is required</p>
+              }
+            </div>
+          </div>
+
+          <div class="input-field mb-3">
+            <div class="input-group"
+              [class.error-div]="form.controls['email'] && form.controls['email'].touched && (form.controls['email'].hasError('required') || form.controls['email'].hasError('email'))">
+              <span class="input-group-text">&#64;</span>
+              <div class="form-floating">
+                <input type="email" class="form-control" id="email" placeholder="Enter your email"
+                  formControlName="email">
+                <label for="email">Email</label>
+              </div>
+            </div>
+            <div class="error-msg">
+              @if(form.controls['email'] && form.controls['email'].touched &&
+              form.controls['email'].hasError('required'))
+              {
+              <p>Email is required</p>
+              }
+              @if(form.controls['email'] && form.controls['email'].touched && form.controls['email'].hasError('email'))
+              {
+              <p>Enter a valid email</p>
+              }
+            </div>
+          </div>
+
+          <div class="input-field  mb-3">
+            <div class="input-group">
+              <span class="input-group-text"><i class="fa-regular fa-circle-user"></i></span>
+              <div class="form-floating">
+                <input type="role" class="form-control" id="role" formControlName="role" readonly>
+                <label for="role">Role <i class="fa-solid fa-lock"></i></label>
+              </div>
+            </div>
+          </div>
+
+          @if(_editing) {
+          <button type="button" class="btn btn-primary px-5 update-btn" (click)="updateProfile()">Update</button>
+          }
+        </div>
+      </div>
+
+
+    </form>
+  </div>
+  <div class="msg">
+    <p><u>Please contact Admin to change <b>Role</b></u></p>
+  </div>
+</div>

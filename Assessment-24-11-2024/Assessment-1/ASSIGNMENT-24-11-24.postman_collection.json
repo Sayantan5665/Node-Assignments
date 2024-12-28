@@ -1,0 +1,414 @@
+{
+	"info": {
+		"_postman_id": "ea093633-4f86-4618-97fb-fca04fd6bfdc",
+		"name": "ASSIGNMENT-24-11-24",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35396607"
+	},
+	"item": [
+		{
+			"name": "ASSIGNMENT-1",
+			"item": [
+				{
+					"name": "user",
+					"item": [
+						{
+							"name": "login-user",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\" : \"sayantan@yopmail.com\",\n    \"password\": \"1234\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5400/api/user/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5400",
+									"path": [
+										"api",
+										"user",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "logout-user",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5400/api/user/logout",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5400",
+									"path": [
+										"api",
+										"user",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get-user-profile",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5400/api/user/fetch/profile/674d58e9b6f3f64b947cb751",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5400",
+									"path": [
+										"api",
+										"user",
+										"fetch",
+										"profile",
+										"674d58e9b6f3f64b947cb751"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "register-user",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "image",
+											"type": "file",
+											"src": "/C:/Users/Sayantan Singha/Downloads/team-1.jpg"
+										},
+										{
+											"key": "name",
+											"value": "Test User",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "testuser@yopmail.com",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "1234",
+											"type": "text"
+										},
+										{
+											"key": "confirmPassword",
+											"value": "1234",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5400/api/user/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5400",
+									"path": [
+										"api",
+										"user",
+										"register"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "question&answer&category",
+					"item": [
+						{
+							"name": "create-category",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"JavaScript\",\n    \"description\": \"All question of JavaScript wiil be in this category\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5400/api/category/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5400",
+									"path": [
+										"api",
+										"category",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create-question",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"What is the difference between .js, .tsx and .jsx in React?\",\n    \"categories\": [\n        \"67446d20fbaa33498d3cc485\", \n        \"6745bbb6ee036c770d5c7e1f\",\n        \"674ec6c46669c171127911fe\"\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5400/api/question/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5400",
+									"path": [
+										"api",
+										"question",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get-question-by-category-id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "image",
+											"type": "file",
+											"src": "postman-cloud:///1efb079d-2a8b-4d60-9799-391bc85e755c"
+										},
+										{
+											"key": "name",
+											"value": "Sayantan Singha",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "sayantan@yopmail.com",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "1234",
+											"type": "text"
+										},
+										{
+											"key": "role",
+											"value": "admin",
+											"type": "text"
+										},
+										{
+											"key": "confirmPassword",
+											"value": "1234",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:5400/api/question/fetch/674444f8301eb53674bb2b20",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5400",
+									"path": [
+										"api",
+										"question",
+										"fetch",
+										"674444f8301eb53674bb2b20"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get-all-question-category-wise",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5400/api/question/fetch/category-wise",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5400",
+									"path": [
+										"api",
+										"question",
+										"fetch",
+										"category-wise"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get-all-question-category-wise Copy",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5400/api/question/fetch/category-wise-1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5400",
+									"path": [
+										"api",
+										"question",
+										"fetch",
+										"category-wise-1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "post-answer",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"content\": \"A JS file is a JavaScript file extension, this is used for any modules and snippets of code made in pure JavaScript. You should use JS files when writing functions that won't use any React feature but will be used among different React components. JSX is a file syntax extension used by React, you can render component, import CSS files and use React hooks among other things. You should use JSX files when rendering a React component. TSX is the TypeScript version of JSX, TypeScript is a superset that adds static typing in JavaScript. You should use TypeScript whenever it's possible to do so as it has numerous advantages (code scalability and static typing)\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5400/api/answer/post/674ec7a9fb075d851006d663",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5400",
+									"path": [
+										"api",
+										"answer",
+										"post",
+										"674ec7a9fb075d851006d663"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get-category-with-question-count",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5400/api/category/fetch/category-with-question-count",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5400",
+									"path": [
+										"api",
+										"category",
+										"fetch",
+										"category-with-question-count"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get-question-with-answer",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5400/api/question/fetch/with-answer/674ec7a9fb075d851006d663",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5400",
+									"path": [
+										"api",
+										"question",
+										"fetch",
+										"with-answer",
+										"674ec7a9fb075d851006d663"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

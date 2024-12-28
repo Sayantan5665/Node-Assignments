@@ -1,0 +1,60 @@
+<div class="login-container-outer d-flex justify-content-center align-items-center">
+  <div class="login-container">
+    <div class="login-image">
+      <img src="image/login-banner.jpg" alt="login image">
+    </div>
+    <div class="login-form">
+      <h2>Login</h2>
+      <form [formGroup]="form" id="login-form">
+
+        <div class="input-field">
+          <label for="email">Email</label>
+
+          <input type="text" id="email" placeholder="Enter your email" formControlName="email"
+            [class.error-div]="form.controls['email'].touched && (form.controls['email'].hasError('required') || form.controls['email'].hasError('email'))">
+          <div class="error-msg">
+            @if(form.get('email')?.touched && form.get('email')?.hasError('required')) {
+            <p>Email is required</p>
+            }
+            @if(form.get('email')?.touched && form.get('email')?.hasError('email')) {
+            <p>Please enter a valid email</p>
+            }
+            <!-- {{ form.get('email')?.hasError('required')? 'Email is required' : '' }}
+                      {{ form.get('email')?.hasError('email')? 'Please enter a valid email' : '' }} -->
+          </div>
+        </div>
+
+        <div class="input-field">
+          <label for="password">Password</label>
+          <div class="password-container">
+            @let _tooglePassword = tooglePassword();
+            <input [type]="_tooglePassword" id="password" placeholder="Enter your password" formControlName="password"
+              [class.error-div]="form.controls['password'].touched && (form.controls['password'].hasError('required') || form.controls['password'].hasError('pattern'))">
+            @if( _tooglePassword == 'password') {
+            <span class="toggle-password" (click)="tooglePassword.set('text')"><i class="fa-regular fa-eye"></i></span>
+            } @else {
+            <span class="toggle-password" (click)="tooglePassword.set('password')"><i
+                class="fa-regular fa-eye-slash"></i></span>
+            }
+          </div>
+          <div class="error-msg">
+            @if(form.get('password')?.touched && form.get('password')?.hasError('required')) {
+            <p>Password is required</p>
+            }
+            @if(form.get('password')?.touched && form.get('password')?.hasError('pattern')) {
+            <p>Password must be at least 8 characters long</p>
+            <p>Password must contain at least one uppercase letter, one lowercase letter, one number, and one special
+              character</p>
+            }
+            <!-- {{ form.get('password')?.hasError('required')? 'Password is required' : '' }}
+                      {{ form.get('password')?.hasError('pattern')? 'Password must be at least 8 characters long' : '' }}
+                      {{ form.get('password')?.hasError('pattern')? 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character' : '' }} -->
+          </div>
+        </div>
+
+        <button type="submit" (click)="login(form)">Login</button>
+      </form>
+      <p>Don't have an account? <a routerLink="/register">Sign up</a></p>
+    </div>
+  </div>
+</div>

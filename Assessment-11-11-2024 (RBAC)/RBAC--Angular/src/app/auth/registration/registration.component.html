@@ -1,0 +1,116 @@
+<div class="login-container-outer d-flex justify-content-center align-items-center">
+  <div class="login-container">
+    <div class="login-image">
+      <img src="image/registration-banner-2.jpg" alt="registration image">
+    </div>
+    <div class="login-form">
+      <h2>Registration</h2>
+      <form [formGroup]="form" id="register-form">
+
+        <div class="input-field upload-profile-img">
+          <div class="profile-pic-wrap">
+            @if (profileImage) {
+            <img class="profile-pic preview" [src]="profileImage" alt="Profile Preview" />
+            } @else {
+            <input type="file" id="profileImage" (change)="handleImageUpload($event)"
+              accept="image/*" />
+            <img class="profile-pic" src="image/profile-pic-placeholder.png" alt="img placeholder">
+            }
+          </div>
+        </div>
+
+        <div class="input-field">
+          <label for="name">Name</label>
+          <input type="text" id="name" placeholder="Enter your name" formControlName="name" [class.error-div]="form.controls['name'].touched && form.controls['name'].hasError('required')">
+          <div class="error-msg">
+            @if(form.get('name')?.touched && form.get('name')?.hasError('required')) {
+            <p>Name is required</p>
+            }
+          </div>
+        </div>
+
+        <div class="input-field">
+          <label for="email">Email</label>
+          <input type="text" id="email" placeholder="Enter your email" formControlName="email" [class.error-div]="form.controls['email'].touched && (form.controls['email'].hasError('required') || form.controls['email'].hasError('email'))">
+          <div class="error-msg">
+            @if(form.get('email')?.touched && form.get('email')?.hasError('required')) {
+            <p>Email is required</p>
+            }
+            @if(form.get('email')?.touched && form.get('email')?.hasError('email')) {
+            <p>Please enter a valid email</p>
+            }
+            <!-- {{ form.get('email')?.hasError('required')? 'Email is required' : '' }}
+                      {{ form.get('email')?.hasError('email')? 'Please enter a valid email' : '' }} -->
+          </div>
+        </div>
+
+        <div class="row g-2  mb-3">
+          <div class="input-field col-md">
+            <div class="input-field">
+              <label for="password">Password</label>
+              <div class="password-container">
+                @let _tooglePassword1 = tooglePassword().pass1;
+                <input [type]="_tooglePassword1" id="password" placeholder="Enter your password"
+                  formControlName="password" [class.error-div]="form.controls['password'].touched && (form.controls['password'].hasError('required') || form.controls['password'].hasError('pattern'))">
+                @if( _tooglePassword1 == 'password') {
+                <span class="toggle-password" (click)="handleTooglePassword('pass1', 'text')"><i
+                    class="fa-regular fa-eye"></i></span>
+                } @else {
+                <span class="toggle-password" (click)="handleTooglePassword('pass1', 'password')"><i
+                    class="fa-regular fa-eye-slash"></i></span>
+                }
+              </div>
+              <div class="error-msg">
+                @if(form.get('password')?.touched && form.get('password')?.hasError('required')) {
+                <p>Password is required</p>
+                }
+                @if(form.get('password')?.touched && form.get('password')?.hasError('pattern')) {
+                <p>Password must be at least 8 characters long</p>
+                <p>Password must contain at least one uppercase letter, one lowercase letter, one number, and one
+                  special
+                  character</p>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="input-field col-md">
+            <div class="input-field">
+              <label for="confirmPassword">Confirm Password</label>
+              <div class="password-container">
+                @let _tooglePassword2 = tooglePassword().pass2;
+                <input [type]="_tooglePassword2" id="confirmPassword" placeholder="Reenter password"
+                  formControlName="confirmPassword" [class.error-div]="form.controls['confirmPassword'].touched && (form.controls['confirmPassword'].hasError('required') || form.controls['confirmPassword'].hasError('pattern'))">
+                @if( _tooglePassword2 == 'password') {
+                <span class="toggle-password" (click)="handleTooglePassword('pass2', 'text')"><i
+                    class="fa-regular fa-eye"></i></span>
+                } @else {
+                <span class="toggle-password" (click)="handleTooglePassword('pass2', 'password')"><i
+                    class="fa-regular fa-eye-slash"></i></span>
+                }
+              </div>
+              <div class="error-msg">
+                @if(form.get('confirmPassword')?.touched && form.get('confirmPassword')?.hasError('required')) {
+                <p>Password is required</p>
+                }
+                @else if(form.get('confirmPassword')?.touched && form.get('confirmPassword')?.hasError('pattern')) {
+                <p>Password must be at least 8 characters long</p>
+                <p>Password must contain at least one uppercase letter, one lowercase letter, one number, and one
+                  special
+                  character</p>
+                }
+                @else if(form.get('confirmPassword')?.touched && form.get('confirmPassword')?.value !==
+                form.get('password')?.value) {
+                <p>Confirm password does not match with entered password</p>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <button type="submit" (click)="register(form)">Register</button>
+      </form>
+      <p>Already have an account? <a routerLink="/login">Login</a></p>
+    </div>
+  </div>
+</div>

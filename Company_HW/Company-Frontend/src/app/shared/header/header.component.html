@@ -1,0 +1,41 @@
+<!-- ======= Header ======= -->
+<header id="header" class="fixed-top">
+  <div class="container d-flex align-items-center">
+
+    <h1 class="logo mr-auto"><a routerLink="home"><span>Com</span>pany</a></h1>
+    <!-- Uncomment below if you prefer to use an image logo -->
+    <!-- <a routerLink="index.html" class="logo mr-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+    <nav class="nav-menu d-none d-lg-block">
+      <ul>
+        <li><a [routerLink]="['/home']" routerLinkActive="link-active">Home</a></li>
+
+        <li><a [routerLink]="['/about']" routerLinkActive="link-active">About</a>
+        </li>
+
+        <!-- <li><a routerLink="#" routerLinkActive="link-active">Courses</a></li> -->
+        <!-- <li><a routerLink="#">Blog</a></li> -->
+        <li><a routerLink="/contact" routerLinkActive="link-active">Contact</a></li>
+        @if(!isLoggedIn()) {
+        <li><a routerLink="/login" routerLinkActive="link-active">Login</a></li>
+        } @else {
+          <img class="profile-img" [src]="userDetails.image" alt="profile-img" [matMenuTriggerFor]="headerMenu">
+        <!-- <li><a></a></li> -->
+        <mat-menu #headerMenu="matMenu">
+          <button mat-menu-item disabled>{{userDetails.name}} ({{userDetails.role | uppercase}})</button>
+          <button mat-menu-item (click)="logout()">Logout</button>
+        </mat-menu>
+        }
+
+      </ul>
+    </nav><!-- .nav-menu -->
+
+    <div class="header-social-links">
+      <a routerLink="#" class="twitter"><i class="icofont-twitter"></i></a>
+      <a routerLink="#" class="facebook"><i class="icofont-facebook"></i></a>
+      <a routerLink="#" class="instagram"><i class="icofont-instagram"></i></a>
+      <a routerLink="#" class="linkedin"><i class="icofont-linkedin"></i></a>
+    </div>
+
+  </div>
+</header><!-- End Header -->
