@@ -12,73 +12,74 @@
     Required APIs
     --------------
         User APIs:
-            •User Signup with Email Account Verification
-            •Allow users to sign up by providing their email, password, and other necessary details.
-            •Send an email verification link to the user upon signup.
-            •User Login
-            •Allow users to log in using their email and password.
-            •Get User Profile
-            •Fetch and display the user's profile information.
-            •Edit User Profile (with Profile Picture)
-            •Update user profile details, including uploading or editing the profile picture.
+            •User Signup with Email Account Verification :
+                •Allow users to sign up by providing their email, password, and other necessary details.
+                •Send an email verification link to the user upon signup.
+            •User Login :
+                •Allow users to log in using their email and password.
+            •Get User Profile :
+                •Fetch and display the user's profile information.
+            •Edit User Profile (with Profile Picture) :
+                •Update user profile details, including uploading or editing the profile picture.
 
         Movie Management APIs (Admin only):
-            •Add Movie
-            •Add movie details including:
-            •Movie name
-            •Genre
-            •Language
-            •Duration
-            •Cast
-            •Director
-            •Release date
-            •Add Theater
-            •Add a new theater with details including:
-            •Theater name
-            •Location
-            •Number of screens
-            •Assign Movies to Theaters
-            •Assign specific movies to available screens in a theater.
-            •Include:
-            •Theater ID
-            •Screen number
-            •Movie ID
-            •Show timings
-            •List of Movies
-            •Fetch a list of all movies available in the database.
-            •Include:
-            •Total number of theaters playing that movie
-            •Theaters and show timings
-            •Edit Movie Details
-            •Update details for an existing movie.
-            •Delete Movie Details
-            •Remove a movie from the database.
+            •Add Movie :
+                •Add movie details including :
+                    •Movie name
+                    •Genre
+                    •Language
+                    •Duration
+                    •Cast
+                    •Director
+                    •Release date
+            •Add Theater :
+                •Add a new theater with details including :
+                    •Theater name
+                    •Location
+                    •Number of screens
+            •Assign Movies to Theaters :
+                •Assign specific movies to available screens in a theater.
+                •Include :
+                    •Theater ID
+                    •Screen number
+                    •Movie ID
+                    •Show timings
+            •List of Movies :
+                •Fetch a list of all movies available in the database.
+                •Include :
+                    •Total number of theaters playing that movie
+                    •Theaters and show timings
+            •Edit Movie Details:
+                •Update details for an existing movie.
+            •Delete Movie Details:
+                •Remove a movie from the database.
 
         Booking APIs:
             •List of Theaters for a Movie
-            •Given a movie ID, fetch the list of theaters playing the movie along with show timings.
+                •Given a movie ID, fetch the list of theaters playing the movie along with show timings.
             •Book Tickets for a Movie
-            •Allow users to book tickets for a movie by providing:
-            •Movie ID
-            •User ID
-            •Theater ID
-            •Show timing
-            •Number of tickets
-            •Update the availability of seats for the selected show.
+                •Allow users to book tickets for a movie by providing:
+                    •Movie ID
+                    •User ID
+                    •Theater ID
+                    •Show timing
+                    •Number of tickets
+                •Update the availability of seats for the selected show.
             •Cancel Booking
-            •Allow users to cancel a booking by providing:
-            •Booking ID
-            •Update the availability of seats for the corresponding show.
+                •Allow users to cancel a booking by providing:
+                    •Booking ID
+                •Update the availability of seats for the corresponding show.
             •View Booking History
-            •Fetch and display the user's booking history.
+                •Fetch and display the user's booking history.
 
         Reports APIs:
             •List of Movies with Total Bookings
-            •Fetch a list of all movies along with the total number of tickets booked for each movie.
+                •Fetch a list of all movies along with the total number of tickets booked for each movie.
             •List of Bookings by Theater
-            •Fetch bookings grouped by theater, including:
-            •Movie name
-            •Total tickets booked for each show
+                •Fetch bookings grouped by theater, including:
+                    •Movie name
+                    •Total tickets booked for each show
             •Send Booking Summary to User Email
-            •Generate a summary of all bookings made by a user and send it to their email in table format.
-=============================================================================================================
+                •Generate a summary of all bookings made by a user and send it to their email in table format.
+
+==============================================================================================================

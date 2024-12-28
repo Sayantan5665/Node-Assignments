@@ -33,7 +33,7 @@ const userSchema: Schema<IUser> = new Schema({
     },
     role: {
         type: String,
-        enum: ['super-admin', 'admin', 'user'],
+        enum: ["admin", "user"],
         default: 'user'
     },
     isVarified: {

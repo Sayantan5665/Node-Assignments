@@ -6,10 +6,10 @@ class userController {
 
     async createUser(req: Request, res: Response): Promise<any> {
         try {
-            const token = req.cookies['x-access-token'] || req.headers['x-access-token'];
+            // const token = req.cookies['x-access-token'] || req.headers['x-access-token'];
             const body: IUser = req.body;
 
-            const newUser: IUser = await userRepo.addUser(req, body, token);
+            const newUser: IUser = await userRepo.addUser(req, body);
 
             return res.status(200).json({
                 status: 200,
@@ -61,9 +61,14 @@ class userController {
                 secure: process.env.NODE_ENV === 'production'
             });
 
+            delete user.isVarified;
+            delete user.isActive;
+            delete user.createdAt;
+            delete user.password;
             return res.status(200).json({
                 status: 200,
                 message: `Welcome ${user.name}!`,
+                data: { ...user, token }
             });
         } catch (error: any) {
             console.error("Login error:", error);

@@ -34,14 +34,15 @@ class userRepo {
         }
     }
 
-    async addUser(req: Request, body: IUser, token: string) {
+    async addUser(req: Request, body: IUser, token?: string): Promise<IUser> {
         try {
+            // if(token?.length) {
             // const creator: ITokenUser = verify(token, process.env.JWT_SECRET!) as ITokenUser;
-
-            // if (!(creator?.role === 'super-admin')) {
-            //     // req.flash('message', ['Only super admins can create users', 'warning']);
-            //     // return res.redirect('/add/member');
+            // if (!(creator?.role === 'super-admin')) {;
             //     throw new Error(`Only super admins can create ${body.role}`);
+            // }
+            // } else {
+            //     throw new Error(`Token is not provided!`);
             // }
 
             const existUser: IUser | null = await this.findOneBy('email', body.email)
@@ -57,7 +58,7 @@ class userRepo {
             body.password = hashedPassword;
             delete body.confirmPassword;
 
-            const file: any = req.file;
+            const file: any = req.file || (req?.files as any || [])[0];
             const basePath: string = `${req.protocol}://${req.get('host')}`;
             let imagePath: string = `${basePath}/uploads/blank-profile-pic.jpg`;
             if (file) {
@@ -73,7 +74,7 @@ class userRepo {
 
             const verificationToken: string = await generateToken({ email: body.email });
 
-            let verification_mail: string = `http://${req.headers.host}/account/confirmation/${verificationToken}`;
+            let verification_mail: string = `http://${req.headers.host}/api/user/account/confirmation/${verificationToken}`;
             const mailOptions: IMailOptions = {
                 from: 'no-reply@sayantan.com',
                 to: body.email,
@@ -145,7 +146,7 @@ class userRepo {
                 throw new Error("User not found!");
             }
 
-            const file = (req.files as any)[0];
+            const file = req.file || (req?.files as any || [])[0];
             if (file) {
                 const basePath: string = `${req.protocol}://${req.get('host')}`;
                 const imagePath: string = `${basePath}/uploads/${file.filename}`;
@@ -169,7 +170,7 @@ class userRepo {
         }
     }
 
-    async fetchProfile(id: string): Promise<IUser|null> {
+    async fetchProfile(id: string): Promise<IUser | null> {
         try {
             const userId = new Types.ObjectId(id);
 
@@ -188,7 +189,7 @@ class userRepo {
                     }
                 }
             ])
-            return users.length > 0? users[0] : null;
+            return users.length > 0 ? users[0] : null;
         } catch (error) {
             throw error;
         }

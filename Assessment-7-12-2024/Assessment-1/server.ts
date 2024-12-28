@@ -6,6 +6,10 @@ import { config } from "dotenv";
 import { join } from "path";
 import cookieParser from "cookie-parser";
 import routes from '@routes';
+import swaggerUi from "swagger-ui-express";
+import swaggerJSDoc from "swagger-jsdoc";
+import SwaggerOptions from './swagger.json';
+const swaggerDocument = swaggerJSDoc(SwaggerOptions as any);
 
 // Initialize Express app
 const app: Express = express();
@@ -31,6 +35,9 @@ app.use('/uploads', express.static(join(__dirname, 'uploads')))
 
 // routers
 app.use(routes);
+
+// Swagger documentation
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const port = process.env.PORT || 9000;
 app.listen(port, () => {
