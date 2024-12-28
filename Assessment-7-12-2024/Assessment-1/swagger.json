@@ -1,9 +1,9 @@
 {
     "swaggerDefinition": {
         "info": {
-            "title": "REST API for Swagger Documentation",
+            "title": "Cinemaast",
             "version": "1.0.0",
-            "description": "REST API for Swagger Documentation",
+            "description": "Cinema Hall Management by Sayantan Singha",
             "contact": {
                 "name": "Sayantan",
                 "email": "sayantan-support@yopmail.com"
