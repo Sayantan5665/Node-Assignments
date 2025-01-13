@@ -1,4 +1,5 @@
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
+import { IRole } from "./role.interface";
 
 export interface IUser extends Document {
     _id: string;
@@ -7,7 +8,7 @@ export interface IUser extends Document {
     name: string;
     email: string;
     password: string;
-    role: 'super-admin' | 'admin' | 'user';
+    role: IRole;
     isVarified: boolean;
     isActive: boolean;
     confirmPassword?: string;
@@ -21,7 +22,7 @@ export interface ITokenUser {
     name: string;
     image: string;
     email: string;
-    role: 'super-admin' | 'admin' | 'user';
+    role: IRole;
     isVarified?: boolean;
     timeZone?: string;
 }

@@ -38,7 +38,7 @@ export const adminAccess = async (req: Request, res: Response, next: NextFunctio
     }
 
     const decoded: ITokenUser = jwt.verify(token, process.env.JWT_SECRET!) as ITokenUser;
-    if (decoded.role!== 'admin') {
+    if (decoded.role.role!== 'admin') {
       res.status(403).json({ message: 'Unauthorized access' });
       return;
     }

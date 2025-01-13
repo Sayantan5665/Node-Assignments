@@ -74,7 +74,8 @@ class userController {
             console.error("Login error:", error);
             return res.status(500).json({
                 status: 500,
-                message: "An unexpected error occurred. Please try again later.",
+                message: error?.message || "An unexpected error occurred. Please try again later.",
+                error: error
             });
         }
     }

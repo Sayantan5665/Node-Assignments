@@ -13,13 +13,36 @@ class userRepo {
             const user: Array<IUser> = await userModel.aggregate([
                 { $match: { [key]: value } },
                 {
+                    $lookup: {
+                        from: "roles",
+                        localField: "role",
+                        foreignField: "_id",
+                        as: "roleDetails"
+                    }
+                },
+                {
+                    $unwind: "$roleDetails"
+                },
+                {
                     $project: {
                         _id: 1,
                         image: 1,
                         name: 1,
                         email: 1,
                         password: 1,
-                        role: 1,
+                        // role: "$roleDetails",
+                        role: {
+                            $cond: {
+                                if: { $ne: ["$roleDetails", null] }, // Check if roleDetails exists
+                                then: {
+                                    role: "$roleDetails.role",
+                                    roleDisplayName: "$roleDetails.roleDisplayName",
+                                    rolegroup: "$roleDetails.rolegroup",
+                                    description: "$roleDetails.description"
+                                },
+                                else: null
+                            }
+                        },
                         isVarified: 1,
                         isActive: 1,
                         timeZone: 1,
@@ -34,7 +57,7 @@ class userRepo {
         }
     }
 
-    async addUser(req: Request, body: IUser, token?: string): Promise<IUser> {
+    async addUser(req: Request, body: any, token?: string): Promise<IUser> {
         try {
             // if(token?.length) {
             // const creator: ITokenUser = verify(token, process.env.JWT_SECRET!) as ITokenUser;
@@ -57,6 +80,7 @@ class userRepo {
             const hashedPassword: string = await hashPassword(body.password);
             body.password = hashedPassword;
             delete body.confirmPassword;
+            body['role'] = '6784f60c27a9d19d7cb962aa'; // if not, then everyone can become a admin by providing role of admin's id
 
             const file: any = req.file || (req?.files as any || [])[0];
             const basePath: string = `${req.protocol}://${req.get('host')}`;
@@ -131,7 +155,8 @@ class userRepo {
                 role: user.role,
                 timeZone: user.timeZone,
             });
-
+            console.log("token when login: ", token);
+            
             return { user, token }
         } catch (error) {
             throw error;

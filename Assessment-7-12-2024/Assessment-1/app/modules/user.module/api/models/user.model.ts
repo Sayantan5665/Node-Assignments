@@ -1,4 +1,4 @@
-import { Model, Schema, model } from "mongoose";
+import { Model, Schema, Types, model } from "mongoose";
 import joi, { ObjectSchema } from "joi";
 import { IUser } from "@interfaces";
 
@@ -32,9 +32,8 @@ const userSchema: Schema<IUser> = new Schema({
         required: true
     },
     role: {
-        type: String,
-        enum: ["admin", "user"],
-        default: 'user'
+        type: Types.ObjectId,
+        ref: 'Role'
     },
     isVarified: {
         type: Boolean,

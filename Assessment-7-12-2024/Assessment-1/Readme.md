@@ -19,7 +19,7 @@ First, clone the repository to your local machine:
 
 ```bash
 git clone https://github.com/Sayantan5665/Node-Assignments.git
-cd /Assessment-7-12-2024/Assessment-1
+cd Assessment-7-12-2024/Assessment-1
 ```
 
 ### 2. Install the dependencies
@@ -42,7 +42,15 @@ It will start the server and connect to the the specified port and database.
 
 
 
-## User Credentials
+## Admin Credentials
 #### email : sayantan@yopmail.com
 #### password : 123456
 
+
+## Swagger api documentation
+
+please click on the bellow link to see Swagger documentation and test the apis
+
+```bash 
+http://localhost:5500/api-docs/
+```
