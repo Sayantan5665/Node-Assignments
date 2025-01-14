@@ -10,7 +10,7 @@ export interface IMovie extends Document {
     name: string;
     genre: string;
     language: string;
-    duration: number;
+    duration: number; // Duration in minutes
     cast: Array<string>;
     director: string;
     releaseDate: Date;
