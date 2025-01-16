@@ -1,5 +1,5 @@
 import { IUser } from "@interfaces";
-import userRepo from "../repositories/user.repositories";
+import userRepo from "../../repositories/user.repositories";
 import { Request, Response } from "express";
 
 class userController {

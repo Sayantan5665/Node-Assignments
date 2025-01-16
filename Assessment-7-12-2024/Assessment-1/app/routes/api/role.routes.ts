@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import roleController from 'app/modules/role.module/api/controllers/role.controller';
+import roleController from 'app/modules/role.module/controllers/api/role.controller';
 import { adminAccess, auth } from "@middlewares";
 const route = Router();
 

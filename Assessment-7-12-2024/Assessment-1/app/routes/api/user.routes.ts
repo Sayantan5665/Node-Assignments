@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import userController from 'app/modules/user.module/api/controllers/user.controller';
+import userController from 'app/modules/user.module/controllers/api/user.controller';
 import { auth } from "@middlewares";
 import { upload } from '@utils';
 const route = Router();

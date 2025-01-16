@@ -33,7 +33,7 @@ const theatreSchema: Schema<ITheatre> = new Schema({
     screens: { type: [screenSchema] }
 }, { timestamps: true, versionKey: false });
 
-const theatreModel: Model<ITheatre> = model<ITheatre>("Theater", theatreSchema);
+const theatreModel: Model<ITheatre> = model<ITheatre>("Theatre", theatreSchema);
 
 export { theatreModel, theatreValidator };
 export default theatreModel;

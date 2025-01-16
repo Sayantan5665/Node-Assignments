@@ -1,6 +1,6 @@
 import { IRole } from "@interfaces";
 import { Request, Response } from "express";
-import roleRepo from "../repositories/role.repositories";
+import roleRepo from "../../repositories/role.repositories";
 
 class roleController {
 

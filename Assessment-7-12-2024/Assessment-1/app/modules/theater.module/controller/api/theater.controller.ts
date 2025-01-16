@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import theatreRepository from "../repository/theater.repository";
+import theatreRepository from "../../repository/theater.repository";
 import { ITheatre } from "@interfaces";
 // import MovieRepository from "../../../movie/repositories/movie.repo";
 
 class TheatreController {
-    async createTheatre(req: Request, res: Response) {
+    async createTheatre(req: Request, res: Response):Promise<any> {
         try {
             const savedTheatre: ITheatre = await theatreRepository.createTheatre(req.body);
             res.status(200).json({
@@ -21,7 +21,7 @@ class TheatreController {
         }
     }
 
-    async getAllTheatres(req: Request, res: Response) {
+    async getAllTheatres(req: Request, res: Response):Promise<any> {
         try {
             const theatres = await theatreRepository.getAllTheatres();
             res.json({ 
@@ -37,7 +37,7 @@ class TheatreController {
         }
     }
 
-    async getTheatreById(req:Request, res:Response) {
+    async getTheatreById(req:Request, res:Response):Promise<any> {
         try {
             const { id } = req.params;
             const theatre = await theatreRepository.getTheatreById(id);
@@ -56,7 +56,7 @@ class TheatreController {
     }
 
 
-    //   async assignMovieToScreen(req, res) {
+    //   async assignMovieToScreen(req, res):Promise<any> {
     //     try {
     //       const { theatreId, screenNumber, movieId, showTimings } = req.body;
 
@@ -88,7 +88,7 @@ class TheatreController {
     //     }
     //   }
 
-    async getTheatersForMovie(req:Request, res:Response) {
+    async getTheatersForMovie(req:Request, res:Response):Promise<any> {
         try {
             const { movieId } = req.params;
 
