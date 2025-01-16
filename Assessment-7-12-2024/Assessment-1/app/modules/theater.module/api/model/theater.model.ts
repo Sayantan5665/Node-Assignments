@@ -1,6 +1,6 @@
 import { Model, Schema, model } from "mongoose";
 import joi, { ObjectSchema } from "joi";
-import { ITheater, IScreen } from "@interfaces";
+import { ITheatre, IScreen } from "@interfaces";
 
 const screenSchema: Schema<IScreen> = new Schema<IScreen>({
     screenNumber: {
@@ -21,19 +21,19 @@ const screenSchema: Schema<IScreen> = new Schema<IScreen>({
     },
 });
 
-const theaterValidator: ObjectSchema<ITheater> = joi.object({
+const theatreValidator: ObjectSchema<ITheatre> = joi.object({
     name: joi.string().required(),
     location: joi.string().required(),
     screens: joi.array().items().required(),
 });
 
-const theaterSchema: Schema<ITheater> = new Schema({
+const theatreSchema: Schema<ITheatre> = new Schema({
     name: { type: "String" },
     location: { type: "String" },
     screens: { type: [screenSchema] }
 }, { timestamps: true, versionKey: false });
 
-const theaterModel: Model<ITheater> = model<ITheater>("Theater", theaterSchema);
+const theatreModel: Model<ITheatre> = model<ITheatre>("Theater", theatreSchema);
 
-export { theaterModel, theaterValidator };
-export default theaterModel;
+export { theatreModel, theatreValidator };
+export default theatreModel;

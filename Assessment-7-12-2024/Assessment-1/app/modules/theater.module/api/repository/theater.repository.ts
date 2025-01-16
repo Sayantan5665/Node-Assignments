@@ -1,10 +1,12 @@
 import { Types } from "mongoose";
-import theatreModel from "../model/theater.model";
-import { ITheater } from "@interfaces";
+import { theatreModel, theatreValidator } from "../model/theater.model";
+import { ITheatre } from "@interfaces";
 
-class TheatreRepository {
-    async createTheatre(theatreData: ITheater): Promise<ITheater> {
+class theatreRepository {
+    async createTheatre(theatreData: ITheatre): Promise<ITheatre> {
         try {
+            const { error } = theatreValidator.validate(theatreData);
+            if (error) throw error;
             const newTheatre = new theatreModel(theatreData);
             return await newTheatre.save();
         } catch (error: any) {
@@ -12,7 +14,7 @@ class TheatreRepository {
         }
     }
 
-    async getAllTheatres(): Promise<Array<ITheater>> {
+    async getAllTheatres(): Promise<Array<ITheatre>> {
         try {
             return await theatreModel.find({});
         } catch (error) {
@@ -20,9 +22,9 @@ class TheatreRepository {
         }
     }
 
-    async getTheatreById(id: string): Promise<ITheater | null> {
+    async getTheatreById(id: string): Promise<ITheatre | null> {
         try {
-            const theater:Array<ITheater> = await theatreModel.aggregate([
+            const theater:Array<ITheatre> = await theatreModel.aggregate([
                 {
                     $match: {
                         _id: new Types.ObjectId(id)
@@ -84,4 +86,4 @@ class TheatreRepository {
     }
 }
 
-module.exports = new TheatreRepository();
+export default new theatreRepository();

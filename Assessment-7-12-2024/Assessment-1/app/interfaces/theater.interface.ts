@@ -1,6 +1,6 @@
 import { Document, Types } from "mongoose";
 
-export interface ITheater extends Document {
+export interface ITheatre extends Document {
     name: string;
     location: string;
     screens: Array<IScreen>;
