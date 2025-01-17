@@ -1,6 +1,6 @@
-import { IMovie } from "@interfaces";
+import { IBooking, IMovie } from "@interfaces";
 import { movieModel, movieValidator } from "../model/movie.model";
-// const Booking = require('../../booking/models/booking.model');
+import { bookingModel } from "app/modules/booking.module/models/booking.model";
 
 class movieRepository {
     async createMovie(movieData: IMovie): Promise<IMovie> {
@@ -72,6 +72,7 @@ class movieRepository {
                         genre: 1,
                         language: 1,
                         releaseDate: 1,
+                        ticketPrice: 1,
                         totalTheaters: { $size: "$theaters" },
                         theaters: {
                             name: "$theaters.name",
@@ -88,87 +89,87 @@ class movieRepository {
         }
     }
 
-    //   async getMoviesWithTotalBookings() {
-    //     try {
-    //       const movieBookings = await Booking.aggregate([
-    //         {
-    //           $group: {
-    //             _id: "$movie", // Group by movie ID
-    //             totalBookings: { $sum: "$numberOfTickets" }, // Sum total tickets booked
-    //           },
-    //         },
-    //         {
-    //           $lookup: {
-    //             from: "movies",
-    //             localField: "_id",
-    //             foreignField: "_id",
-    //             as: "movieDetails",
-    //           },
-    //         },
-    //         {
-    //           $unwind: "$movieDetails",
-    //         },
-    //         {
-    //           $project: {
-    //             movieId: "$_id",
-    //             movieName: "$movieDetails.name",
-    //             totalBookings: 1,
-    //           },
-    //         },
-    //       ]);
-    //       return movieBookings;
-    //     } catch (error) {
-    //       throw error;
-    //     }
-    //   }
+      async getMoviesWithTotalBookings(): Promise<IBooking[]> {
+        try {
+          const movieBookings = await bookingModel.aggregate([
+            {
+              $group: {
+                _id: "$movie", // Group by movie ID
+                totalBookings: { $sum: "$numberOfTickets" }, // Sum total tickets booked
+              },
+            },
+            {
+              $lookup: {
+                from: "movies",
+                localField: "_id",
+                foreignField: "_id",
+                as: "movieDetails",
+              },
+            },
+            {
+              $unwind: "$movieDetails",
+            },
+            {
+              $project: {
+                movieId: "$_id",
+                movieName: "$movieDetails.name",
+                totalBookings: 1,
+              },
+            },
+          ]);
+          return movieBookings;
+        } catch (error) {
+          throw error;
+        }
+      }
 
     // List of bookings by theater
-    //   async getBookingsByTheater() {
-    //     try {
-    //       const bookingsByTheater = await Booking.aggregate([
-    //         {
-    //           $lookup: {
-    //             from: "theatres",
-    //             localField: "theater",
-    //             foreignField: "_id",
-    //             as: "theaterDetails",
-    //           },
-    //         },
-    //         {
-    //           $unwind: "$theaterDetails",
-    //         },
-    //         {
-    //           $group: {
-    //             _id: "$theater", // Group by theater ID
-    //             totalTickets: { $sum: "$numberOfTickets" }, // Total tickets booked for each theater
-    //             movies: { $push: { movie: "$movie", showTiming: "$showTiming", numberOfTickets: "$numberOfTickets" } },
-    //           },
-    //         },
-    //         {
-    //           $lookup: {
-    //             from: "movies",
-    //             localField: "movies.movie",
-    //             foreignField: "_id",
-    //             as: "moviesDetails",
-    //           },
-    //         },
-    //         {
-    //           $unwind: "$moviesDetails",
-    //         },
-    //         {
-    //           $project: {
-    //             theaterName: "$theaterDetails.name",
-    //             theaterLocation: "$theaterDetails.location",
-    //             movies: 1,
-    //             totalTickets: 1,
-    //           },
-    //         },
-    //       ]);
-    //       return bookingsByTheater;
-    //     } catch (error) {
-    //       throw error;
-    //     }
-    //   }
+      async getBookingsByTheater(): Promise<IBooking[]> {
+        try {
+          const bookingsByTheater = await bookingModel.aggregate([
+            {
+              $lookup: {
+                from: "theatres",
+                localField: "theater",
+                foreignField: "_id",
+                as: "theaterDetails",
+              },
+            },
+            {
+              $unwind: "$theaterDetails",
+            },
+            {
+              $group: {
+                _id: "$theater", // Group by theater ID
+                totalTickets: { $sum: "$numberOfTickets" }, // Total tickets booked for each theater
+                movies: { $push: { movie: "$movie", showTiming: "$showTiming", numberOfTickets: "$numberOfTickets" } },
+              },
+            },
+            {
+              $lookup: {
+                from: "movies",
+                localField: "movies.movie",
+                foreignField: "_id",
+                as: "moviesDetails",
+              },
+            },
+            {
+              $unwind: "$moviesDetails",
+            },
+            {
+              $project: {
+                theaterName: "$theaterDetails.name",
+                theaterLocation: "$theaterDetails.location",
+                movies: 1,
+                totalTickets: 1,
+              },
+            },
+          ]);
+          return bookingsByTheater;
+        } catch (error) {
+          throw error;
+        }
+      }
 }
 
 export default new movieRepository();

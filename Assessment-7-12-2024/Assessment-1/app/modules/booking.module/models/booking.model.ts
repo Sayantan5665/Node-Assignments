@@ -9,13 +9,13 @@ const bookingValidator: ObjectSchema<IBooking> = joi.object({
   showTimings: joi.date().required(),
   numberOfTickets: joi.number().integer().min(1).required(),
   price: joi.number().required(),
-  status: joi.string().valid(['booked', 'cancelled', 'used']).required()
+  status: joi.string().required()
 });
 
 const bookingSchema: Schema<IBooking> = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
-    ref: "User", // Reference to the User model
+    ref: "User",
     required: true,
   },
   movieId: {

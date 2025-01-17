@@ -8,6 +8,7 @@ export interface IMovie extends Document {
     cast: Array<string>;
     director: string;
     releaseDate: Date;
+    ticketPrice: number;
     isActive: boolean;
     createdAt?: string;
     updatedAt?: string;

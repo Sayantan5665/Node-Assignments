@@ -126,38 +126,38 @@ class movieController {
         }
     }
 
-    // async getMoviesWithTotalBookings(req:Request, res:Response): Promise<any> {
-    //     try {
-    //         const movies = await movieRepository.getMoviesWithTotalBookings();
-    //         res.status(200).json({ 
-    //             status: 200,
-    //             message: "Movies with total bookings fetched successfully.", 
-    //             movies 
-    //         });
-    //     } catch (error) {
-    //         res.status(500).json({
-    //             status: 500,
-    //             message: "Failed to fetch movies with total bookings",
-    //             error
-    //         });
-    //     }
-    // }
+    async getMoviesWithTotalBookings(req:Request, res:Response): Promise<any> {
+        try {
+            const movies = await movieRepository.getMoviesWithTotalBookings();
+            res.status(200).json({ 
+                status: 200,
+                message: "Movies with total bookings fetched successfully.", 
+                movies 
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 500,
+                message: "Failed to fetch movies with total bookings",
+                error
+            });
+        }
+    }
 
-    // async getBookingsByTheater(req:Request, res:Response): Promise<any> {
-    //     try {
-    //         const bookings = await movieRepository.getBookingsByTheater();
-    //         res.status(200).json({ status: 200,
-    //             message: "Bookings by theater fetched successfully.", 
-    //             bookings 
-    //         });
-    //     } catch (error) {
-    //         res.status(500).json({
-    //             status: 500,
-    //             message: "Failed to fetch bookings by theater",
-    //             error
-    //         });
-    //     }
-    // }
+    async getBookingsByTheater(req:Request, res:Response): Promise<any> {
+        try {
+            const bookings = await movieRepository.getBookingsByTheater();
+            res.status(200).json({ status: 200,
+                message: "Bookings by theater fetched successfully.", 
+                bookings 
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 500,
+                message: "Failed to fetch bookings by theater",
+                error
+            });
+        }
+    }
 }
 
 export default new movieController();

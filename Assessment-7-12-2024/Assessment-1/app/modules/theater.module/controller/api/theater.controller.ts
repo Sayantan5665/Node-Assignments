@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import theatreRepository from "../../repository/theater.repository";
 import { ITheatre } from "@interfaces";
+import movieRepository from "app/modules/movie.module/repository/movie.repository";
 // import MovieRepository from "../../../movie/repositories/movie.repo";
 
-class TheatreController {
+class theatreController {
     async createTheatre(req: Request, res: Response):Promise<any> {
         try {
             const savedTheatre: ITheatre = await theatreRepository.createTheatre(req.body);
@@ -56,37 +57,39 @@ class TheatreController {
     }
 
 
-    //   async assignMovieToScreen(req, res):Promise<any> {
-    //     try {
-    //       const { theatreId, screenNumber, movieId, showTimings } = req.body;
+      async assignMovieToScreen(req:Request, res:Response):Promise<any> {
+        try {
+          const { theatreId, screenNumber, movieId, showTimings } = req.body;
 
-    //       // Validate required fields
-    //       if (!theatreId || !screenNumber || !movieId || !showTimings) {
-    //         return res.status(400).json({ message: "All fields are required." });
-    //       }
+          if (!theatreId || !screenNumber || !movieId || !showTimings) {
+            return res.status(400).json({ message: "All fields are required." });
+          }
 
-    //       // Validate movie existence
-    //       const movie = await MovieRepository.getMovieById(movieId);
-    //       if (!movie) {
-    //         return res.status(404).json({ message: "Movie not found." });
-    //       }
+          const movie = await movieRepository.getMovieById(movieId);
+          if (!movie) {
+            return res.status(404).json({ message: "Movie not found." });
+          }
 
-    //       // Assign the movie to the specified screen in the theater
-    //       const updatedTheatre = await TheatreRepository.assignMovieToScreen(
-    //         theatreId,
-    //         screenNumber,
-    //         movieId,
-    //         showTimings
-    //       );
+          const updatedTheatre = await theatreRepository.assignMovieToScreen(
+            theatreId,
+            screenNumber,
+            movieId,
+            showTimings
+          );
 
-    //       res.status(200).json({
-    //         message: "Movie assigned to screen successfully.",
-    //         theatre: updatedTheatre,
-    //       });
-    //     } catch (error) {
-    //       res.status(500).json({ message: error.message });
-    //     }
-    //   }
+          res.status(200).json({
+            status: 200,
+            message: "Movie assigned to screen successfully.",
+            theatre: updatedTheatre,
+          });
+        } catch (error) {
+          res.status(500).json({
+            status: 500,
+            message: "Failed to assign movie to screen.",
+            error: error,
+          });
+        }
+      }
 
     async getTheatersForMovie(req:Request, res:Response):Promise<any> {
         try {
@@ -116,4 +119,4 @@ class TheatreController {
     }
 }
 
-module.exports = new TheatreController();
+export default new theatreController();

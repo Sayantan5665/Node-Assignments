@@ -10,6 +10,7 @@ const movieValidator: ObjectSchema<IMovie> = joi.object({
     cast: joi.array().items(joi.string()).required(),
     director: joi.string().required(),
     releaseDate: joi.date().required(),
+    ticketPrice: joi.number().required(),
     isActive: joi.boolean(),
 });
 
@@ -36,6 +37,10 @@ const movieSchema: Schema<IMovie> = new Schema({
     },
     director: {
         type: String,
+        required: true,
+    },
+    ticketPrice: {
+        type: Number,
         required: true,
     },
     releaseDate: {
