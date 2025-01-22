@@ -1,0 +1,116 @@
+2. Assignment: Institute Management System:
+============================================
+
+    MongoDB Database Schema
+    --------------------------
+        Collections:
+            •Users (Students, Teachers, Admins)
+            •Courses
+            •Batches
+            •Enrollments
+            •Attendance
+            •Exams
+            •Roles [User and Admin]
+
+    Required APIs
+    ----------------
+        User Management APIs:
+            •User Signup with Email Verification
+                •Allow users (students, teachers) to sign up by providing:
+                    •Name
+                    •Email
+                    •Password
+                    •Role (Student/Teacher).
+                    •Send an email verification link to the user upon signup.
+            •User Login
+                •Allow users to log in using their email and password.
+            •Get User Profile
+                •Fetch and display the user profile details (students/teachers).
+            •Edit User Profile
+                •Update user profile details, including:
+                    •Profile picture
+                    •Contact information
+            •List of Users (Admin Only)
+                •Fetch a list of all users in the system based on roles (Students, Teachers).
+
+        Course Management APIs:
+            •Add Course (Admin Only)
+                •Add details for a new course including:
+                    •Course name
+                    •Description
+                    •Duration
+                    •Fees
+            •Edit Course Details (Admin Only)
+                •Update course information.
+            •Delete Course (Admin Only)
+                •Remove a course from the system.
+            •List of Courses
+                •Fetch all available courses along with:
+                    •Total batches for the course
+                    •Total enrolled students
+
+        Batch Management APIs:
+            •Add Batch (Admin/Teacher)
+                •Create a batch for a specific course with:
+                    •Batch name
+                    •Start date
+                    •End date
+                    •Assigned teacher
+            •Assign Students to Batch (Admin Only)
+                •Enroll students into a specific batch.
+            •List of Batches
+                •Fetch all batches for a course, including:
+                    •Batch name
+                    •Total students
+                    •Assigned teacher
+            •Update Batch Details (Admin/Teacher)
+                •Modify batch information such as schedule or assigned teacher.
+            •Delete Batch (Admin Only)
+                •Remove a batch from the system.
+
+        Enrollment and Attendance APIs:
+            •Enroll Student into a Course
+                •Allow students to enroll in a course by providing:
+                    •Student ID
+                    •Course ID
+            •Mark Attendance (Teacher)
+                •Input attendance details:
+                    •Batch ID
+                    •Date
+                    •List of present and absent students
+            •View Attendance (Student/Teacher)
+                •Fetch attendance records by:
+                    •Student (for a specific course or batch).
+                    •Batch (view attendance percentage for all students).
+
+        Exam Management APIs:
+            •Create Exam (Admin/Teacher)
+                •Add an exam for a batch including:
+                    •Exam name
+                    •Date
+                    •Duration
+                    •Total marks
+            •Assign Marks to Students (Teacher)
+                •Input marks for students for a specific exam.
+            •Fetch Exam Results (Student/Teacher)
+                •View results by:
+                    •Student (individual performance).
+                    •Batch (all student results).
+            •Update Exam Details (Teacher)
+                •Modify exam information such as date or marks distribution.
+
+        Reports APIs:
+            •List of Courses with Total Enrollments
+                •Fetch all courses along with the total number of enrolled students.
+            •Batch Performance Report (Admin/Teacher)
+                •Fetch a report for a specific batch including:
+                    •Attendance percentage for all students.
+                    •Average exam performance for the batch.
+            •Student Performance Report
+                •Fetch a student’s overall performance, including:
+                    •Attendance percentage.
+                    •Average marks for all exams.
+            •Send Student Report to Email
+                •Generate a detailed performance report for a student and email it in table format.
+
+===========================================================================================================

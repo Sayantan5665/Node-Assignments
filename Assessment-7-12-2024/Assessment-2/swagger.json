@@ -1,34 +1,26 @@
 {
     "swaggerDefinition": {
         "info": {
-            "title": "Cinemaast",
+            "title": "ABCD Institutes",
             "version": "1.0.0",
-            "description": "Cinema Hall Management by Sayantan Singha",
+            "description": "Institutes Swagger Documentation by Sayantan Singha",
             "contact": {
                 "name": "Sayantan",
                 "email": "sayantan-support@yopmail.com"
             },
             "servers": [
-                "http://localhost:5500"
+                "http://localhost:5501"
             ]
         },
-        "host": "localhost:5500",
+        "host": "localhost:5501",
         "tags": [
             {
                 "name": "Auth",
                 "description": "Authentication APIs"
             },
             {
-                "name": "Theatre",
-                "description": "Theatre APIs"
-            },
-            {
-                "name": "Booking",
-                "description": "Booking APIs"
-            },
-            {
-                "name": "Movies",
-                "description": "Movies APIs"
+                "name": "Other",
+                "description": "Other APIs"
             }
         ],
         "schemes": [
