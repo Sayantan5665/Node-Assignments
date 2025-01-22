@@ -13,9 +13,9 @@ const roleValidator: ObjectSchema<IRole> = joi.object({
 const roleSchema: Schema<IRole> = new Schema({
     role: {
         type: String,
-        enum: ["admin", "user"],
+        enum: ['admin', 'student', 'teacher'],
         unique: true,
-        default: 'user'
+        default: 'student'
     },
     roleDisplayName: {
         type: String,

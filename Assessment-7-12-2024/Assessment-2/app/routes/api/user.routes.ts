@@ -11,6 +11,7 @@ const route = Router();
  *     summary: Register user
  *     tags:
  *       - Auth
+ *     security: []
  *     produces:
  *       - application/json
  *     consumes:
@@ -68,6 +69,7 @@ route.post('/register', upload.single('image'), userController.createUser);
  *     summary: User login
  *     tags:
  *       - Auth
+ *     security: []
  *     produces:
  *       - application/json
  *     parameters:
@@ -103,7 +105,7 @@ route.post('/login', userController.loginUser);
   *     tags:
   *       - Auth
   *     security:
-  *       - x-access-token: []
+  *       - token: []
   *     produces:
   *       - application/json
   *     parameters:
@@ -137,7 +139,7 @@ route.get('/fetch/profile/:id', auth, userController.getUserProfile);
  *     tags:
  *       - Auth
  *     security:
- *       - x-access-token: []
+ *       - token: []
  *     produces:
  *       - application/json
  *     consumes:
@@ -194,7 +196,7 @@ route.put('/update/:id', auth, upload.single('image'), userController.updateUser
   *     tags:
   *       - Auth
   *     security:
-  *       - x-access-token: []
+  *       - token: []
   *     produces:
   *       - application/json
   *     responses:
@@ -222,6 +224,7 @@ route.get('/logout', auth, userController.logoutUser);
   *     summary: User email confirmation
   *     tags:
   *       - Auth
+  *     security: []
   *     produces:
   *       - application/json
   *     parameters:

@@ -1,7 +1,7 @@
 import { Document } from "mongoose";
 
 export interface IRole {
-    role: "admin" | "user";
+    role: "admin" | "student" | "teacher";
     roleDisplayName: string;
     rolegroup: string;
     description: string;

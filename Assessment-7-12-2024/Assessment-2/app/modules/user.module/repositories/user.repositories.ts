@@ -80,7 +80,7 @@ class userRepo {
             const hashedPassword: string = await hashPassword(body.password);
             body.password = hashedPassword;
             delete body.confirmPassword;
-            body['role'] = '67850496d40709a6b61e69e7'; // if not, then everyone can become admin by providing role of admin's id
+            body['role'] = '6790dc24b15d4ee66eac3a0c'; // if not, then everyone can become admin by providing admin's role id
 
             const file: any = req.file || (req?.files as any || [])[0];
             const basePath: string = `${req.protocol}://${req.get('host')}`;

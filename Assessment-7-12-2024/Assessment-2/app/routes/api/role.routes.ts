@@ -11,7 +11,7 @@ const route = Router();
  *     tags:
  *       - Auth
  *     security:
- *       - x-access-token: []
+ *       - token: []
  *     produces:
  *       - application/json
  *     parameters:
@@ -53,7 +53,7 @@ route.post('/create', adminAccess, roleController.createRole);
  *     tags: 
  *       - Auth
  *     security:
- *       - x-access-token: []
+ *       - token: []
  *     produces: application/json
  *     responses:
  *       200: 
@@ -81,7 +81,7 @@ route.get('/fetch', auth, roleController.getRoles);
  *     tags: 
  *       - Auth
  *     security:
- *       - x-access-token: []
+ *       - token: []
  *     produces: application/json
  *     parameters:
  *       - in: path

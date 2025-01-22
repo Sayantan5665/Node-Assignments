@@ -26,6 +26,19 @@
         "schemes": [
             "http",
             "https"
+        ],
+        "securityDefinitions": {
+            "token": {
+                "type": "apiKey",
+                "name": "x-access-token",
+                "in": "header",
+                "description": "JWT authurization of an API"
+            }
+        },
+        "security": [
+            {
+                "token": []
+            }
         ]
     },
     "apis": [
