@@ -1,11 +1,12 @@
 import { Request } from "express";
 import { comparePassword, generateToken, hashPassword, sendVerificationEmail, verifyToken } from "@utils";
-import { IUser, IMailOptions, IVerificationToken, ITokenUser } from "@interfaces";
+import { IUser, IMailOptions, IVerificationToken, ITokenUser, IRole } from "@interfaces";
 import { userModel, userValidator } from "../models/user.model";
 import { verify } from "jsonwebtoken";
 import { unlink } from "fs";
 import path from "path";
 import { Types } from "mongoose";
+import roleRepositories from "app/modules/role.module/repositories/role.repositories";
 
 class userRepo {
     async findOneBy(key: string, value: string): Promise<IUser | null> {
@@ -57,17 +58,48 @@ class userRepo {
         }
     }
 
-    async addUser(req: Request, body: any, token?: string): Promise<IUser> {
-        try {
-            // if(token?.length) {
-            // const creator: ITokenUser = verify(token, process.env.JWT_SECRET!) as ITokenUser;
-            // if (!(creator?.role === 'super-admin')) {;
-            //     throw new Error(`Only super admins can create ${body.role}`);
-            // }
-            // } else {
-            //     throw new Error(`Token is not provided!`);
-            // }
+    fetchAllUsers(): Promise<Array<IUser>> {
+        return userModel.aggregate([
+            {
+                $lookup: {
+                    from: "roles",
+                    localField: "role",
+                    foreignField: "_id",
+                    as: "roleDetails"
+                }
+            },
+            {
+                $unwind: "$roleDetails"
+            },
+            {
+                $project: {
+                    _id: 1,
+                    image: 1,
+                    name: 1,
+                    email: 1,
+                    role: {
+                        $cond: {
+                            if: { $ne: ["$roleDetails", null] }, // Check if roleDetails exists
+                            then: {
+                                role: "$roleDetails.role",
+                                roleDisplayName: "$roleDetails.roleDisplayName",
+                                rolegroup: "$roleDetails.rolegroup",
+                                description: "$roleDetails.description"
+                            },
+                            else: null
+                        }
+                    },
+                    isVarified: 1,
+                    timeZone: 1,
+                    createdAt: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+                    // updatedAt: { $dateToString: { format: '%Y-%m-%d', date: '$updatedAt' } }
+                }
+            }
+        ]);
+    }
 
+    async addUser(req: Request, body: any): Promise<IUser> {
+        try {
             const existUser: IUser | null = await this.findOneBy('email', body.email)
             if (existUser) {
                 throw new Error("Email already exists!");
@@ -80,7 +112,16 @@ class userRepo {
             const hashedPassword: string = await hashPassword(body.password);
             body.password = hashedPassword;
             delete body.confirmPassword;
-            body['role'] = '6790dc24b15d4ee66eac3a0c'; // if not, then everyone can become admin by providing admin's role id
+            if(body.role === 'admin') {
+                throw new Error("Cannot rergister as admin!");
+            } else {
+                const role:IRole | null = await roleRepositories.getRoleByRole(body.role);
+                if (!role) {
+                    throw new Error("Role not found!");
+                } else {
+                    body['role'] = (role._id as any).toString();
+                }
+            }            
 
             const file: any = req.file || (req?.files as any || [])[0];
             const basePath: string = `${req.protocol}://${req.get('host')}`;

@@ -150,6 +150,25 @@ class userController {
         }
     }
 
+    async fetchAllUsers(req: Request, res: Response): Promise<any> {
+        try {
+            const users: Array<IUser> = await userRepo.fetchAllUsers();
+
+            return res.status(200).json({
+                status: 200,
+                message: "Users fetched successfully!",
+                data: users,
+            });
+        } catch (error: any) {
+            console.log("error: ", error);
+            return res.status(500).json({
+                status: 500,
+                message: error.message || "Something went wrong! Please try again.",
+                error: error,
+            })
+        }
+    }
+
 }
 
 export default new userController();

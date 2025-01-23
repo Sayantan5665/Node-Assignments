@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import userController from 'app/modules/user.module/controllers/api/user.controller';
-import { auth } from "@middlewares";
+import { adminAccess, auth } from "@middlewares";
 import { upload } from '@utils';
 const route = Router();
 
@@ -29,6 +29,10 @@ const route = Router();
  *         type: string
  *         required: true
  *       - in: formData
+ *         name: role
+ *         type: string
+ *         required: true
+ *       - in: formData
  *         name: password
  *         type: string
  *         required: true
@@ -36,22 +40,6 @@ const route = Router();
  *         name: confirmPassword
  *         type: string
  *         required: true
- *     schema:
- *       type: object
- *       required:
- *         - email
- *         - password 
- *       properties:
- *         name:
- *           type: string
- *         email:
- *           type: string
- *         mobile:
- *           type: string
- *         password:
- *           type: string
- *         confirmPassword:
- *           type: string
  *     responses:
  *        200:
  *          description: User register successfully
@@ -248,5 +236,34 @@ route.get('/logout', auth, userController.logoutUser);
   *         description: Server Error
 */
 route.get('/account/confirmation/:token', userController.verifyEmail);
+
+/**
+  * @swagger
+  * /api/user/fetch/all:
+  *   get:
+  *     summary: fetch all users (Admin only)
+  *     tags:
+  *       - Auth
+  *     security: 
+  *       - token: []
+  *     produces:
+  *       - application/json
+  *     responses:
+  *       200: 
+  *         description: Fetched all users successfully.
+  *         content:
+  *           application/json:
+  *             schema:
+  *               type: object
+  *               properties:
+  *                 message:
+  *                   type: string
+  *                   example: Fetched all users successfully.
+  *       400:
+  *         description: Bad Request
+  *       500:
+  *         description: Server Error
+*/
+route.get('/fetch/all', adminAccess, userController.fetchAllUsers);
 
 export default route;

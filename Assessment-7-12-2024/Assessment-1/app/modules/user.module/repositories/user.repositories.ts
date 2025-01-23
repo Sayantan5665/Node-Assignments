@@ -57,17 +57,8 @@ class userRepo {
         }
     }
 
-    async addUser(req: Request, body: any, token?: string): Promise<IUser> {
+    async addUser(req: Request, body: any): Promise<IUser> {
         try {
-            // if(token?.length) {
-            // const creator: ITokenUser = verify(token, process.env.JWT_SECRET!) as ITokenUser;
-            // if (!(creator?.role === 'super-admin')) {;
-            //     throw new Error(`Only super admins can create ${body.role}`);
-            // }
-            // } else {
-            //     throw new Error(`Token is not provided!`);
-            // }
-
             const existUser: IUser | null = await this.findOneBy('email', body.email)
             if (existUser) {
                 throw new Error("Email already exists!");

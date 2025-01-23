@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { ITokenUser } from '../interfaces/user.interface';
+import userRepositories from 'app/modules/user.module/repositories/user.repositories';
 
 
 declare global {
@@ -21,6 +22,11 @@ export const auth = async (req: Request, res: Response, next: NextFunction): Pro
     }
 
     const decoded: ITokenUser = jwt.verify(token, process.env.JWT_SECRET!) as ITokenUser;
+    const _user = await userRepositories.findOneBy('email', decoded.email);
+    if (!_user) {
+      res.status(401).json({ message: 'Invalid authentication token' });
+      return
+    }
     req.user = { ...decoded };
     next();
   } catch (error) {
@@ -38,7 +44,12 @@ export const adminAccess = async (req: Request, res: Response, next: NextFunctio
     }
 
     const decoded: ITokenUser = jwt.verify(token, process.env.JWT_SECRET!) as ITokenUser;
-    if (decoded.role.role!== 'admin') {
+    const _user = await userRepositories.findOneBy('email', decoded.email);
+    if (!_user) {
+      res.status(401).json({ message: 'Invalid authentication token' });
+      return
+    }
+    if (decoded.role.role!== 'admin' || decoded.role.role !== _user.role.role) {
       res.status(403).json({ message: 'Unauthorized access' });
       return;
     }
