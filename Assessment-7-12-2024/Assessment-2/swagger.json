@@ -25,6 +25,10 @@
             {
                 "name": "Batches",
                 "description": "Batches APIs"
+            },
+            {
+                "name": "Enrollments",
+                "description": "Enrollments APIs"
             }
         ],
         "schemes": [

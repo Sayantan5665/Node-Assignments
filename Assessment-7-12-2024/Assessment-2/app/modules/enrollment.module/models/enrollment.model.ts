@@ -37,7 +37,7 @@ const enrollmentSchema: Schema<IEnrollment> = new Schema({
     }
 }, {timestamps: true, versionKey: false});
 
-const enrollmentModel: Model<IEnrollment> = model('Course', enrollmentSchema);
+const enrollmentModel: Model<IEnrollment> = model('Enrollment', enrollmentSchema);
 
 export { enrollmentModel, enrollmentValidator };
 export default enrollmentModel;
