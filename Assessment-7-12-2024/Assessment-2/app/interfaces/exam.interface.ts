@@ -6,5 +6,6 @@ export interface IExam extends Document {
     date: Date,
     duration: number, // in minutes,
     totalMarks: number,
+    passingMarks: number,
     results: Array<{ student: Types.ObjectId, marks: number }>
 }
