@@ -40,6 +40,7 @@ export const authorize = (...roles:Array<"admin" | "student" | "teacher">) => {
       res.status(403).json({ 
         message: 'You do not have permission to perform this action'
       });
+      return;
     }
     next();
   };

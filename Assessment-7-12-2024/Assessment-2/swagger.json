@@ -21,6 +21,10 @@
             {
                 "name": "Courses",
                 "description": "Courses APIs"
+            },
+            {
+                "name": "Batches",
+                "description": "Batches APIs"
             }
         ],
         "schemes": [

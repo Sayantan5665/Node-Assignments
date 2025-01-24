@@ -4,11 +4,12 @@ import { IBatch } from "@interfaces";
 
 const batchValidator:ObjectSchema<IBatch> = joi.object({
     name: joi.string().required(),
-    course: joi.string().required(),
-    teacher: joi.string().required(),
+    courseId: joi.string().required(),
+    teacherId: joi.string().required(),
     startDate: joi.date().required(),
     endDate: joi.date().required(),
-    students: joi.array().items(joi.string()).required()
+    students: joi.array().items(joi.string()).required(),
+    isActive: joi.boolean()
 });
 
 const batchSchema: Schema<IBatch> = new Schema({
@@ -21,7 +22,7 @@ const batchSchema: Schema<IBatch> = new Schema({
         ref: 'Course',
         required: true
     },
-    teacher: {
+    teacherId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
@@ -37,7 +38,11 @@ const batchSchema: Schema<IBatch> = new Schema({
     students: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }]
+    }],
+    isActive: {
+        type: Boolean,
+        default: true
+    }
 }, {timestamps: true, versionKey: false});
 
 const batchModel: Model<IBatch> = model('Batch', batchSchema);

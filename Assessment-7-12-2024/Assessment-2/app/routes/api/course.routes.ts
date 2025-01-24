@@ -44,7 +44,6 @@ const route = Router();
 */
 route.post('/create', auth, authorize('admin'), courseController.createCourse);
 
-
 /**
  * @swagger
  * /api/course/fetch/all:
@@ -75,13 +74,28 @@ route.get('/fetch/all', courseController.fetchAllCourses);
 /**
  * @swagger
  * /api/course/update/{id}:
- *   get:
+ *   put:
  *     summary: Update courses information (Admin only)
  *     tags: 
  *       - Courses
  *     security:
  *       - token: []
  *     produces: application/json
+ *     parameters:
+ *       - in: body
+ *         name: Create Courses
+ *         description: Create Courses.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             name:
+ *               type: string
+ *             description:
+ *               type: string
+ *             duration:
+ *               type: number
+ *             fees:
+ *               type: number
  *     responses:
  *       200: 
  *         description: Course updated successfully
@@ -98,7 +112,7 @@ route.get('/fetch/all', courseController.fetchAllCourses);
  *       500:
  *         description: Server Error
  */
-route.get('/update/:id', auth, authorize('admin'), courseController.updateCourse);
+route.put('/update/:id', auth, authorize('admin'), courseController.updateCourse);
 
 /**
  * @swagger
