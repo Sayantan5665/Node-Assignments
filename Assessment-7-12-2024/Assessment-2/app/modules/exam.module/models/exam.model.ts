@@ -1,8 +1,8 @@
 import { Model, model, Schema } from "mongoose";
-import joi, { object, ObjectSchema } from "joi";
+import joi, { ObjectSchema } from "joi";
 import { IExam } from "@interfaces";
 
-const examValidator:ObjectSchema<IExam> = object({
+const examValidator:ObjectSchema<IExam> = joi.object({
     name: joi.string().required(),
     batch: joi.string().required(),
     date: joi.date().required(),

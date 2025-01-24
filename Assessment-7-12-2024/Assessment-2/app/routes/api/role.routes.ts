@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import roleController from 'app/modules/role.module/controllers/api/role.controller';
-import { adminAccess, auth } from "@middlewares";
+import { auth, authorize } from "@middlewares";
 const route = Router();
 
 /**
  * @swagger
  * /api/user/role/create:
  *   post:
- *     summary: Create Roles
+ *     summary: Create Roles (Admin only)
  *     tags:
  *       - Auth
  *     security:
@@ -42,7 +42,7 @@ const route = Router();
  *        500:
  *          description: Server Error
 */
-route.post('/create', adminAccess, roleController.createRole);
+route.post('/create', auth, authorize('admin'), roleController.createRole);
 
 
 /**
@@ -77,7 +77,7 @@ route.get('/fetch', auth, roleController.getRoles);
  * @swagger
  * /api/user/role/delete/{id}:
  *   delete:
- *     summary: Delete roles
+ *     summary: Delete roles (Admin only)
  *     tags: 
  *       - Auth
  *     security:
@@ -104,6 +104,6 @@ route.get('/fetch', auth, roleController.getRoles);
  *       500:
  *         description: Server Error
  */
-route.delete('/delete/:id', adminAccess, roleController.deleteRole);
+route.delete('/delete/:id', auth, authorize('admin'), roleController.deleteRole);
 
 export default route;

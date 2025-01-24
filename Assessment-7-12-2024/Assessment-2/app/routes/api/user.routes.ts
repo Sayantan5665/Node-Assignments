@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import userController from 'app/modules/user.module/controllers/api/user.controller';
-import { adminAccess, auth } from "@middlewares";
+import { auth, authorize } from "@middlewares";
 import { upload } from '@utils';
 const route = Router();
 
@@ -264,6 +264,6 @@ route.get('/account/confirmation/:token', userController.verifyEmail);
   *       500:
   *         description: Server Error
 */
-route.get('/fetch/all', adminAccess, userController.fetchAllUsers);
+route.get('/fetch/all', auth, authorize('admin'), userController.fetchAllUsers);
 
 export default route;

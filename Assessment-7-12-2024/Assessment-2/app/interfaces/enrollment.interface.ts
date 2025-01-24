@@ -1,9 +1,9 @@
 import { Document, Types } from "mongoose";
 
 export interface IEnrollment extends Document {
-    student: Types.ObjectId,
-    course: Types.ObjectId,
-    batch: Types.ObjectId,
+    studentId: Types.ObjectId,
+    courseId: Types.ObjectId,
+    batchId: Types.ObjectId,
     enrollmentDate: Date,
     status: 'active' | 'completed' | 'dropped'
   }

@@ -19,8 +19,8 @@
                 "description": "Authentication APIs"
             },
             {
-                "name": "Other",
-                "description": "Other APIs"
+                "name": "Courses",
+                "description": "Courses APIs"
             }
         ],
         "schemes": [

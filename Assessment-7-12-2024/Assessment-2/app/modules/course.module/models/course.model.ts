@@ -1,12 +1,13 @@
 import { Model, model, Schema } from "mongoose";
-import joi, { object, ObjectSchema } from "joi";
+import joi, { ObjectSchema } from "joi";
 import { ICourse } from "@interfaces";
 
-const courseValidator:ObjectSchema<ICourse> = object({
+const courseValidator:ObjectSchema<ICourse> = joi.object({
     name: joi.string().required(),
     description: joi.string().required(),
     duration: joi.number().required(),
-    fees: joi.number().required()
+    fees: joi.number().required(),
+    isActive: joi.boolean()
 });
 
 const courseSchema: Schema<ICourse> = new Schema({
@@ -25,6 +26,10 @@ const courseSchema: Schema<ICourse> = new Schema({
     fees: {
         type: Number,
         required: true
+    },
+    isActive: {
+        type: Boolean,
+        default: true
     }
 });
 

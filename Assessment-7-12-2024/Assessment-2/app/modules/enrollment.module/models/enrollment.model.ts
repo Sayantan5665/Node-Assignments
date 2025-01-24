@@ -1,27 +1,27 @@
 import { Model, model, Schema } from "mongoose";
-import joi, { object, ObjectSchema } from "joi";
+import joi, { ObjectSchema } from "joi";
 import { IEnrollment } from "@interfaces";
 
-const enrollmentValidator:ObjectSchema<IEnrollment> = object({
-    student: joi.string().required(),
-    course: joi.string().required(),
-    batch: joi.string().required(),
+const enrollmentValidator:ObjectSchema<IEnrollment> = joi.object({
+    studentId: joi.string().required(),
+    courseId: joi.string().required(),
+    batchId: joi.string().required(),
     enrollmentDate: joi.date(),
     status: joi.string()
 });
 
 const enrollmentSchema: Schema<IEnrollment> = new Schema({
-    student: {
+    studentId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    course: {
+    courseId: {
         type: Schema.Types.ObjectId,
         ref: 'Course',
         required: true
     },
-    batch: {
+    batchId: {
         type: Schema.Types.ObjectId,
         ref: 'Batch',
         required: true

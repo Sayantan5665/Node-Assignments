@@ -5,4 +5,5 @@ export interface ICourse extends Document {
     description: string,
     duration: number, // in months
     fees: number,
+    isActive?: boolean
 }

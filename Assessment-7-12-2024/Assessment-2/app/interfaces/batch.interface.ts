@@ -2,7 +2,7 @@ import { Document, Types } from "mongoose";
 
 export interface IBatch extends Document {
     name: string,
-    course: Types.ObjectId,
+    courseId: Types.ObjectId,
     teacher: Types.ObjectId,
     startDate: Date,
     endDate: Date,

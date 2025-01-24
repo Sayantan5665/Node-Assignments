@@ -1,8 +1,8 @@
 import { IAttendance } from "@interfaces";
 import { Model, model, Schema } from "mongoose";
-import joi, { object, ObjectSchema } from "joi";
+import joi, { ObjectSchema } from "joi";
 
-const attendanceValidator:ObjectSchema<IAttendance> = object({
+const attendanceValidator:ObjectSchema<IAttendance> = joi.object({
     batch: joi.string().required(),
     date: joi.date().required(),
     records: joi.array().items(joi.object({

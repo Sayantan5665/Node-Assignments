@@ -1,8 +1,8 @@
 import { Model, model, Schema } from "mongoose";
-import joi, { object, ObjectSchema } from "joi";
+import joi, { ObjectSchema } from "joi";
 import { IBatch } from "@interfaces";
 
-const batchValidator:ObjectSchema<IBatch> = object({
+const batchValidator:ObjectSchema<IBatch> = joi.object({
     name: joi.string().required(),
     course: joi.string().required(),
     teacher: joi.string().required(),
@@ -16,7 +16,7 @@ const batchSchema: Schema<IBatch> = new Schema({
         type: String,
         required: true
     },
-    course: {
+    courseId: {
         type: Schema.Types.ObjectId,
         ref: 'Course',
         required: true
