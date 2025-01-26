@@ -253,9 +253,74 @@ class batchRepository {
         }
     }
 
-    async getBatchById(id: string): Promise<IBatch | null> {
+    async getBatchById(batchId: string): Promise<any | null> {
         try {
-            const batch: IBatch | null = await batchModel.findById(id).populate('courseId', 'teacherId', 'students');
+            // const batch: IBatch | null = await batchModel.findById(id).populate('courseId', 'teacherId', 'students');
+            const batch: IBatch | null = (await batchModel.aggregate([
+                {
+                    $match: {_id: new Types.ObjectId(batchId)}
+                },
+                {
+                    $lookup: {
+                        from: 'courses',
+                        localField: 'courseId',
+                        foreignField: '_id',
+                        as: 'course'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'teacherId',
+                        foreignField: '_id',
+                        as: 'teacher'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField:'students',
+                        foreignField: '_id',
+                        as:'studentDetails'
+                    }
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        name: 1,
+                        course: {
+                            $arrayElemAt: ["$course", 0]
+                        },
+                        // teacher: {
+                        //     $arrayElemAt: ["$teacher", 0]
+                        // },
+                        teacher: {
+                            $arrayElemAt: [
+                                {
+                                    $map: {
+                                        input: "$teacher",
+                                        as: "teacherDoc",
+                                        in: {
+                                            _id: "$$teacherDoc._id",
+                                            image: "$$teacherDoc.image",
+                                            email: "$$teacherDoc.email"
+                                        }
+                                    }
+                                },
+                                0
+                            ]
+                        },
+                        totalStudents: { $size: '$students' },
+                        studentDetails: {
+                            _id: 1,
+                            image: 1,
+                            email: 1
+                        },
+                        startDate: 1,
+                        endDate: 1
+                    }
+                }
+            ]))[0];
             return batch;
         } catch (error) {
             console.error(error);

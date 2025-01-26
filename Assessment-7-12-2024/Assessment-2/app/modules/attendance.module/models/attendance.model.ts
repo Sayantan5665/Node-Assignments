@@ -3,24 +3,25 @@ import { Model, model, Schema } from "mongoose";
 import joi, { ObjectSchema } from "joi";
 
 const attendanceValidator:ObjectSchema<IAttendance> = joi.object({
-    batch: joi.string().required(),
-    date: joi.date().required(),
+    batchId: joi.string().required(),
+    date: joi.date(),
     records: joi.array().items(joi.object({
         student: joi.string().required(),
         status: joi.string().valid('present', 'absent').required()
     })).required(),
-    markedBy: joi.string().required()
+    markedBy: joi.string().required(),
+    uniqueId: joi.string().required()
 });
 
 const attendanceSchema: Schema<IAttendance> = new Schema({
-    batch: {
+    batchId: {
         type: Schema.Types.ObjectId,
         ref: 'Batch',
         required: true
     },
     date: {
         type: Date,
-        required: true
+        default: Date.now()
     },
     records: [{
         student: {
@@ -37,6 +38,10 @@ const attendanceSchema: Schema<IAttendance> = new Schema({
     markedBy: {
         type: Schema.Types.ObjectId,
         ref: 'User',
+        required: true
+    },
+    uniqueId: {
+        type: String,
         required: true
     }
 }, {timestamps: true, versionKey: false});

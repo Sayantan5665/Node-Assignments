@@ -29,6 +29,10 @@
             {
                 "name": "Enrollments",
                 "description": "Enrollments APIs"
+            },
+            {
+                "name": "Attendance",
+                "description": "Attendance APIs"
             }
         ],
         "schemes": [

@@ -4,59 +4,30 @@ import { IAttendance, IBatch } from "@interfaces";
 import { Types } from "mongoose";
 
 class attendanceRepository {
-    // async addUpdateAttendance(body: IAttendance): Promise<IAttendance> {
-    //     try {
-    //         const batch: IBatch | null = await batchRepository.getBatchById(body.batch.toString());
-    //         if (!batch) throw new Error('Batch not found');
-
-    //         if (batch.teacherId.toString() != body.markedBy.toString()) { throw new Error('Only assign teacher can mark attendance.'); }
-
-    //         const { error } = attendanceValidator.validate(body);
-    //         if (error) throw error;
-
-    //         const existingAttendance:IAttendance|null = await attendanceModel.findOne({
-    //             batch: body.batch,
-    //             date: body.date
-    //         });
-
-    //         if (existingAttendance) {
-    //             // check if student is already marked and if marked update attendance status with new one
-    //             body.records.forEach((record, index) => {
-    //                 if (existingAttendance.records.find(r => r.student.toString() === record.student.toString())) {
-    //                     // already marked
-    //                     existingAttendance.records[index].status = record.status;
-    //                 } else {
-    //                     // not marked yet
-    //                     existingAttendance.records.push(record);
-    //                 }
-    //             })
-    //             body = existingAttendance;
-    //         }
-
-    //         const data = new attendanceModel(body);
-    //         const newAttendance: IAttendance = await data.save();
-    //         return newAttendance;
-    //     } catch (error) {
-    //         throw error;
-    //     }
-    // }
-
     async addUpdateAttendance(body: IAttendance): Promise<IAttendance> {
         try {
-            const batch: IBatch | null = await batchRepository.getBatchById(body.batch.toString());
+            const batch = await batchRepository.getBatchById(body.batchId.toString());
             if (!batch) throw new Error('Batch not found');
 
-            if (batch.teacherId.toString() !== body.markedBy.toString()) {
+            if (batch.teacher._id.toString() !== body.markedBy.toString()) {
                 throw new Error('Only the assigned teacher can mark attendance.');
             }
 
-            const { error } = attendanceValidator.validate(body);
-            if (error) throw error;
+            // generateing a unique id for checking attendance for each day
+            const givenDate = new Date(body.date);
+            const day = String(givenDate.getDate()).padStart(2, '0'); // Get day and pad with 0 if needed
+            const month = String(givenDate.getMonth() + 1).padStart(2, '0'); // Get month (0-based, so add 1) and pad
+            const year = givenDate.getFullYear(); // Get full year
+            const uniqueId = body.batchId+`-${day}-${month}-${year}`;
 
             const existingAttendance: IAttendance | null = await attendanceModel.findOne({
-                batch: body.batch,
-                date: body.date,
+                batchId: new Types.ObjectId(body.batchId),
+                uniqueId: uniqueId,
             });
+
+            if((new Date()).setHours(0, 0, 0, 0) < givenDate.setHours(0, 0, 0, 0)) {
+                throw new Error('You cannot mark attendance for future.');
+            }
 
             if (existingAttendance) {
                 // Create a Map for quick student lookup
@@ -73,9 +44,14 @@ class attendanceRepository {
                     }
                 });
 
-                const updatedAttendance: IAttendance = await existingAttendance.save();
-                return updatedAttendance;
+                const updatedAttendance: IAttendance | null = await attendanceModel.findByIdAndUpdate(existingAttendance._id, existingAttendance, {new: true});
+                return updatedAttendance || {} as IAttendance;
             }
+
+
+            body.uniqueId = uniqueId;
+            const { error } = attendanceValidator.validate(body);
+            if (error) throw error;
 
             const newAttendance = new attendanceModel(body);  // If no existing attendance, create a new record
             return await newAttendance.save();
@@ -83,56 +59,6 @@ class attendanceRepository {
             throw error;
         }
     }
-
-    /** From ChatGPT */
-    // async addUpdateAttendance(body: IAttendance): Promise<IAttendance> {
-    //     try {
-    //         // Validate batch
-    //         const batch: IBatch | null = await batchRepository.getBatchById(body.batch.toString());
-    //         if (!batch) throw new Error('Batch not found');
-
-    //         // Ensure only the assigned teacher can mark attendance
-    //         if (batch.teacherId.toString() !== body.markedBy.toString()) {
-    //             throw new Error('Only the assigned teacher can mark attendance.');
-    //         }
-
-    //         // Validate the attendance body
-    //         const { error } = attendanceValidator.validate(body);
-    //         if (error) throw new Error(`Validation Error: ${error.message}`);
-
-    //         // Process each record efficiently
-    //         for (const record of body.records) {
-    //             await attendanceModel.updateOne(
-    //                 { batch: body.batch, date: body.date, "records.student": record.student },
-    //                 {
-    //                     $set: { "records.$.status": record.status }, // Update the status of existing records
-    //                 },
-    //                 { upsert: false } // Do not create if the record doesn't exist
-    //             );
-
-    //             // Add the record if it doesn't already exist
-    //             await attendanceModel.updateOne(
-    //                 { batch: body.batch, date: body.date },
-    //                 {
-    //                     $addToSet: { records: record }, // Add record only if not present
-    //                 },
-    //                 { upsert: true } // Create the document if it doesn't exist
-    //             );
-    //         }
-
-    //         // Fetch and return the updated attendance document
-    //         const updatedAttendance = await attendanceModel.findOne({
-    //             batch: body.batch,
-    //             date: body.date,
-    //         });
-
-    //         return updatedAttendance as IAttendance;
-    //     } catch (error) {
-    //         throw new Error(`Attendance Error: ${error.message}`);
-    //     }
-    // }
-
-
 
 
 
@@ -146,13 +72,13 @@ class attendanceRepository {
             const attendanceRecords: IAttendance[] = await attendanceModel.aggregate([
                 {
                     $match: {
-                        batch: batchId
+                        batchId: batchId
                     }
                 },
                 {
                     $lookup: {
                         from: 'batches',
-                        localField: 'batch',
+                        localField: 'batchId',
                         foreignField: '_id',
                         as: 'batchInfo'
                     }
@@ -185,8 +111,8 @@ class attendanceRepository {
     */
     async getAttendanceOfRecordsByBatch(batchId: string): Promise<IAttendance[]> {
         try {
-            const attendancePercentage:IAttendance[] = await attendanceModel.aggregate([
-                { $match: { batch: batchId } },
+            const attendancePercentage: IAttendance[] = await attendanceModel.aggregate([
+                { $match: { batchId: batchId } },
                 { $unwind: "$records" },
                 {
                     $group: {
@@ -218,7 +144,7 @@ class attendanceRepository {
                     },
                 },
             ]);
-    
+
             return attendancePercentage;
         } catch (error) {
             throw error;
@@ -232,7 +158,7 @@ class attendanceRepository {
                 {
                     $lookup: {
                         from: 'batches',
-                        localField: 'batch',
+                        localField: 'batchId',
                         foreignField: '_id',
                         as: 'batchInfo',
                     }
@@ -251,7 +177,7 @@ class attendanceRepository {
                 {
                     $group: {
                         _id: "$_id",
-                        batch: { $first: "$batch" },
+                        batchId: { $first: "$batchId" },
                         date: { $first: "$date" },
                         markedBy: { $first: "$markedBy" },
                         batchInfo: { $first: "$batchInfo" },
