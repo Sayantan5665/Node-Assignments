@@ -7,7 +7,7 @@ const route = Router();
  * @swagger
  * /api/attendance/mark:
  *   post:
- *     summary: Mark attendance (Assign teacher only)
+ *     summary: Mark and update attendance (Assign teacher only)
  *     tags:
  *       - Attendance
  *     security:
