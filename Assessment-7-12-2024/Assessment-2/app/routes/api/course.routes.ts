@@ -21,9 +21,9 @@ const route = Router();
  *         schema:
  *           type: object
  *           required:
- *             - name,
- *             - description,
- *             - duration,
+ *             - name
+ *             - description
+ *             - duration
  *             - fees
  *           properties:
  *             name:
@@ -82,6 +82,10 @@ route.get('/fetch/all', courseController.fetchAllCourses);
  *       - token: []
  *     produces: application/json
  *     parameters:
+ *       - in: path
+ *         name: id
+ *         type: string
+ *         required: true
  *       - in: body
  *         name: Create Courses
  *         description: Create Courses.

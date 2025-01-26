@@ -26,7 +26,6 @@ const route = Router();
  *             - teacherId
  *             - startDate
  *             - endDate
- *             - students
  *           properties:
  *             name:
  *               type: string
@@ -40,10 +39,6 @@ const route = Router();
  *             endDate:
  *               type: string
  *               format: date
- *             students:
- *               type: array
- *               items:
- *                 type: string
  *     responses:
  *        200:
  *          description: Batches created successfully
@@ -93,7 +88,7 @@ route.post('/assign-students', auth, authorize('admin'), batchController.assignS
  * @swagger
  * /api/batch/remove-students:
  *   post:
- *     summary: Remove student to batches (Admin only)
+ *     summary: Remove student from batches (Admin only)
  *     tags:
  *       - Batches
  *     security:
@@ -103,7 +98,7 @@ route.post('/assign-students', auth, authorize('admin'), batchController.assignS
  *     parameters:
  *       - in: body
  *         name: Remove student to batches
- *         description: Remove student to batches.
+ *         description: Remove student from batches.
  *         schema:
  *           type: object
  *           required:
@@ -136,6 +131,10 @@ route.post('/remove-students', auth, authorize('admin'), batchController.removeS
  *     produces:
  *       - application/json
  *     parameters:
+ *       - in: path
+ *         name: id
+ *         type: string
+ *         required: true
  *       - in: body
  *         name: Update Batches
  *         description: Update Batches.
@@ -154,10 +153,6 @@ route.post('/remove-students', auth, authorize('admin'), batchController.removeS
  *             endDate:
  *               type: string
  *               format: date
- *             students:
- *               type: array
- *               items:
- *                 type: string
  *     responses:
  *        200:
  *          description: Batche information updated successfully
@@ -170,13 +165,18 @@ route.put('/update/:id', auth, authorize('admin'), batchController.updateBatch);
 
 /**
  * @swagger
- * /api/batch/fetch/all:
+ * /api/batch/fetch/all/{courseId}:
  *   get:
  *     summary: Fetch all the batches
  *     tags: 
  *       - Batches
  *     security: []
  *     produces: application/json
+ *     parameters:
+ *       - in: path
+ *         name: courseId
+ *         type: string
+ *         required: true
  *     responses:
  *       200: 
  *         description: All batches fetched successfully
@@ -193,7 +193,7 @@ route.put('/update/:id', auth, authorize('admin'), batchController.updateBatch);
  *       500:
  *         description: Server Error
  */
-route.get('/fetch/all', batchController.getAllBatches);
+route.get('/fetch/all/:courseId', batchController.getAllBatches);
 
 /**
  * @swagger

@@ -24,7 +24,6 @@ const route = Router();
  *             - studentId
  *             - courseId
  *             - batchId
- *             - enrollmentDate
  *           properties:
  *             studentId:
  *               type: string
@@ -35,6 +34,12 @@ const route = Router();
  *             enrollmentDate:
  *               type: string
  *               format: date
+ *             status:
+ *               type: string
+ *               enum:
+ *                 - active
+ *                 - completed
+ *                 - dropped
  *     responses:
  *        200:
  *          description: Enrolled student successfully

@@ -8,7 +8,10 @@ class batchController {
      */
     async createBatch(req: Request, res: Response): Promise<any> {
         try {
-            const newBatch: IBatch = await batchRepository.addBatch(req.body);
+            const body:Partial<IBatch> = req.body;
+            body?.students && delete body.students;
+
+            const newBatch: IBatch = await batchRepository.addBatch(body);
             return res.status(200).json({
                 status: 200,
                 message: 'Batch added successfully',
@@ -83,7 +86,11 @@ class batchController {
     async updateBatch(req: Request, res: Response): Promise<any> {
         try {
             const batchId: string = req.params.id;
-            const updatedBatch: IBatch | null = await batchRepository.updateBatch(batchId, req.body);
+
+            const body:Partial<IBatch> = req.body;
+            body?.students && delete body.students
+
+            const updatedBatch: IBatch | null = await batchRepository.updateBatch(batchId, body);
             if (!updatedBatch) {
                 return res.status(200).json({
                     status: 400,
@@ -132,7 +139,7 @@ class batchController {
      */
     async getAllBatches(req: Request, res: Response): Promise<any> {
         try {
-            const batches: IBatch[] = await batchRepository.getAllBatches(req.body.courseId);
+            const batches: IBatch[] = await batchRepository.getAllBatches(req.params.courseId);
             return res.status(200).json({
                 status: 200,
                 message: 'Fetched all batches',

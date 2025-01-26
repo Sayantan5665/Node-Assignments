@@ -8,7 +8,7 @@ const batchValidator:ObjectSchema<IBatch> = joi.object({
     teacherId: joi.string().required(),
     startDate: joi.date().required(),
     endDate: joi.date().required(),
-    students: joi.array().items(joi.string()).required(),
+    students: joi.array().items(joi.string()),
     isActive: joi.boolean()
 });
 

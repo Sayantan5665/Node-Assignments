@@ -13,18 +13,24 @@ class enrollmentRepository {
                 throw new Error('Cannot find student role');
             }
             const [batch, course, student] = await Promise.all([
-                batchModel.findById(body.batchId),
-                courseModel.findById(body.courseId),
+                batchModel.findOne({ _id: body.batchId, isActive: true }),
+                courseModel.findOne({ _id: body.courseId, isActive: true }),
                 userModel.findOne({ _id: body.studentId, role: studentRole._id })
             ]);
             if (!batch) throw new Error('Course not found');
             if (!course) throw new Error('Batch not found');
             if (!student) throw new Error('Teacher not found');
 
+            // check if the courseId in the batch is same as the provided coursesId
+            if(batch.courseId.toString() != body.courseId.toString()) {
+                throw new Error('This batch is not in this course');
+            }
+
             // Check if already enrolled
-            const existingEnrollment = await enrollmentModel.findOne({
-                student: body.studentId,
-                course: body.courseId,
+            const existingEnrollment:IEnrollment|null = await enrollmentModel.findOne({
+                studentId: body.studentId,
+                courseId: body.courseId,
+                batchId: body.batchId,
                 status: 'active'
             });
 

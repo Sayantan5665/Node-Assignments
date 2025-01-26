@@ -1,13 +1,14 @@
 import { Types } from 'mongoose';
 import { batchModel, batchValidator } from '../models/batch.model';
-import { IBatch, ICourse, IRole } from '@interfaces';
+import { IBatch, ICourse, IEnrollment, IRole } from '@interfaces';
 import courseModel from 'app/modules/course.module/models/course.model';
 import userModel from 'app/modules/user.module/models/user.model';
 import roleRepositories from 'app/modules/role.module/repositories/role.repositories';
+import enrollmentModel from 'app/modules/enrollment.module/models/enrollment.model';
 
 
 class batchRepository {
-    async addBatch(body: IBatch): Promise<IBatch> {
+    async addBatch(body: Partial<IBatch>): Promise<IBatch> {
         try {
             const { error } = batchValidator.validate(body);
             if (error) throw error;
@@ -58,6 +59,59 @@ class batchRepository {
                 throw new Error('Teacher not found');
             }
 
+
+            // if (batch.students.includes(new Types.ObjectId(studentId))) {
+            //     throw new Error('Student is already assigned to this batch');
+            // }
+
+            /*** using aggregate for practice */
+            const existStudent = (await batchModel.aggregate([
+                {
+                    $match: {
+                        _id: new Types.ObjectId(batchId),
+                        students: { $in: [new Types.ObjectId(studentId)] },
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'users', // The collection storing student details
+                        localField: 'students', // Field in the current collection (array of ObjectIds)
+                        foreignField: '_id', // Field in the `users` collection (ObjectId)
+                        as: 'studentDetails', // New field to hold the joined data
+                    }
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        name: 1,
+                        exist: {
+                            $cond: [{ $in: [new Types.ObjectId(studentId), "$students"] }, true, false],
+                        },
+                        studentDetails: {
+                            $filter: {
+                                input: "$studentDetails",
+                                as: "student",
+                                cond: {
+                                    $eq: ["$$student._id", new Types.ObjectId(studentId)]
+                                }
+                            }
+                        }
+                    }
+                }
+            ]))[0];
+            if (existStudent?.exist) {
+                throw new Error("Student is already assigned to this batch");
+            }
+
+            const isEnrolled: IEnrollment | null = await enrollmentModel.findOne({
+                studentId: studentId,
+                batchId: batchId,
+                status: 'active'
+            });
+            if(!isEnrolled) {
+                throw new Error("Student is not enrolled in this batch");
+            }
+
             batch.students.push(new Types.ObjectId(studentId));
             const updatedBatch: IBatch = await batch.save();
             return updatedBatch;
@@ -86,7 +140,13 @@ class batchRepository {
                 throw new Error('Teacher not found');
             }
 
-            batch.students = batch.students.filter((id) => id.toString() !== studentId);
+            const newStudentList = batch.students.filter((id) => id.toString() !== studentId);
+            if (newStudentList.length == batch.students.length) {
+                throw new Error('Student is not assign to this batch');
+            } else {
+                batch.students = newStudentList;
+            }
+
             const updatedBatch: IBatch = await batch.save();
             return updatedBatch;
         } catch (error) {
@@ -121,10 +181,10 @@ class batchRepository {
             if (!course) {
                 throw new Error('Course not found');
             }
-            
-            const batches: IBatch[] = await batchModel.aggregate([
+
+            const [batches] = await batchModel.aggregate([
                 {
-                    $match: { courseId: new Types.ObjectId(courseId) },
+                    $match: { courseId: new Types.ObjectId(courseId), isActive: true },
                 },
                 {
                     $lookup: {
@@ -143,18 +203,60 @@ class batchRepository {
                     }
                 },
                 {
+                    $lookup: {
+                        from: "users",
+                        localField: "students",
+                        foreignField: "_id",
+                        as: "studentDetails"
+                    }
+                },
+                {
                     $project: {
                         _id: 1,
                         name: 1,
-                        course: 1,
-                        teacher: 1,
+                        course: {
+                            $arrayElemAt: ["$course", 0]
+                        },
+                        teacher: {
+                            $arrayElemAt: ["$teacher", 0]
+                        },
                         totalStudents: { $size: '$students' },
+                        studentDetails: {
+                            _id: 1,
+                            image: 1,
+                            email: 1
+                        },
                         startDate: 1,
                         endDate: 1
                     }
+                },
+                {
+                    $group: {
+                        _id: null, // Group all batches together
+                        batches: { $push: "$$ROOT" }, // Collect all batch documents
+                        batchCount: { $sum: 1 } // Count the total number of batches
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        batches: 1,
+                        batchCount: 1
+                    }
                 }
-            ])
+            ]);
+
             return batches;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    async getBatchById(id: string): Promise<IBatch | null> {
+        try {
+            const batch: IBatch | null = await batchModel.findById(id).populate('courseId', 'teacherId', 'students');
+            return batch;
         } catch (error) {
             console.error(error);
             throw error;
