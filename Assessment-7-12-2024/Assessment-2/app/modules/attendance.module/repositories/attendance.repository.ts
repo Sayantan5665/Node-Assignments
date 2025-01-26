@@ -188,41 +188,35 @@ class attendanceRepository {
             const attendancePercentage:IAttendance[] = await attendanceModel.aggregate([
                 { $match: { batch: batchId } },
                 { $unwind: "$records" },
-                { 
+                {
                     $group: {
-                        _id: "records.student",
-                        total: { $sum: 1 }
-                    } 
-                }
-                // {
-                //     $group: {
-                //         _id: "$records.student", // Group by student ID
-                //         total: { $sum: 1 }, // Count total attendance records
-                //         present: {
-                //             $sum: { $cond: [{ $eq: ["$records.status", "present"] }, 1, 0] },
-                //         }, // Count 'present' records
-                //     },
-                // },
-                // {
-                //     $lookup: {
-                //         from: "users", // Assuming the 'User' collection is named 'users'
-                //         localField: "_id",
-                //         foreignField: "_id",
-                //         as: "studentDetails",
-                //     },
-                // },
-                // {
-                //     $unwind: "$studentDetails", // Unwind student details
-                // },
-                // {
-                //     $project: {
-                //         studentId: "$_id",
-                //         name: "$studentDetails.name", // Include student name
-                //         attendancePercentage: {
-                //             $multiply: [{ $divide: ["$present", "$total"] }, 100],
-                //         }, // Calculate percentage
-                //     },
-                // },
+                        _id: "$records.student", // Group by student ID
+                        total: { $sum: 1 }, // Count total attendance records
+                        present: {
+                            $sum: { $cond: [{ $eq: ["$records.status", "present"] }, 1, 0] },
+                        }, // Count 'present' records
+                    },
+                },
+                {
+                    $lookup: {
+                        from: "users", // Assuming the 'User' collection is named 'users'
+                        localField: "_id",
+                        foreignField: "_id",
+                        as: "studentDetails",
+                    },
+                },
+                {
+                    $unwind: "$studentDetails", // Unwind student details
+                },
+                {
+                    $project: {
+                        studentId: "$_id",
+                        name: "$studentDetails.name", // Include student name
+                        attendancePercentage: {
+                            $multiply: [{ $divide: ["$present", "$total"] }, 100],
+                        }, // Calculate percentage
+                    },
+                },
             ]);
     
             return attendancePercentage;
