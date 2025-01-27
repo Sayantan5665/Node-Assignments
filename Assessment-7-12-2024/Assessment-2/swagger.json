@@ -33,6 +33,10 @@
             {
                 "name": "Attendance",
                 "description": "Attendance APIs"
+            },
+            {
+                "name": "Examinations",
+                "description": "Examinations APIs"
             }
         ],
         "schemes": [

@@ -58,10 +58,11 @@ route.post('/mark', auth, authorize('teacher'), attendanceController.markAttenda
  * @swagger
  * /api/attendance/fetch/of-batch/{batchId}:
  *   get:
- *     summary: Fetch attendance of a batch
+ *     summary: Fetch attendance of a batch (Admin/Teacher)
  *     tags: 
  *       - Attendance
- *     security: []
+ *     security: 
+ *       - token: []
  *     produces: application/json
  *     parameters:
  *       - in: path
@@ -84,17 +85,18 @@ route.post('/mark', auth, authorize('teacher'), attendanceController.markAttenda
  *       500:
  *         description: Server Error
  */
-route.get('/fetch/of-batch/:batchId', attendanceController.fetchAttendanceOfRecordsByBatch);
+route.get('/fetch/of-batch/:batchId', auth, authorize('admin', 'teacher'), attendanceController.fetchAttendanceOfRecordsByBatch);
 
 
 /**
  * @swagger
  * /api/attendance/fetch:
  *   get:
- *     summary: Fetch attendance records of a student in a batch
+ *     summary: Fetch attendance records of a student in a batch (Admin/Teacher)
  *     tags: 
  *       - Attendance
- *     security: []
+ *     security: 
+ *       - token: []
  *     produces: application/json
  *     parameters:
  *       - in: query
@@ -121,16 +123,17 @@ route.get('/fetch/of-batch/:batchId', attendanceController.fetchAttendanceOfReco
  *       500:
  *         description: Server Error
  */
-route.get('/fetch', attendanceController.getAttendanceRecordsByStudent);
+route.get('/fetch', auth, authorize('admin', 'teacher'), attendanceController.getAttendanceRecordsByStudent);
 
 /**
  * @swagger
  * /api/attendance/fetch/all:
  *   get:
- *     summary: Fetch all attendance records
+ *     summary: Fetch all attendance records (Admin/Teacher)s
  *     tags: 
  *       - Attendance
- *     security: []
+ *     security: 
+ *       - token: []
  *     produces: application/json
  *     responses:
  *       200: 
@@ -148,7 +151,7 @@ route.get('/fetch', attendanceController.getAttendanceRecordsByStudent);
  *       500:
  *         description: Server Error
  */
-route.get('/fetch/all', attendanceController.geAllAttendanceRecords);
+route.get('/fetch/all', auth, authorize('admin', 'teacher'), attendanceController.geAllAttendanceRecords);
 
 
 export default route;

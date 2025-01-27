@@ -4,15 +4,15 @@ import { IExam } from "@interfaces";
 
 const examValidator:ObjectSchema<IExam> = joi.object({
     name: joi.string().required(),
-    batch: joi.string().required(),
+    batchId: joi.string().required(),
     date: joi.date().required(),
     duration: joi.number().required(), // in minutes,
     totalMarks: joi.number().required(),
     passingMarks: joi.number().required(),
     results: joi.array().items(joi.object({
-        student: joi.string().required(),
+        studentId: joi.string().required(),
         marks: joi.number().required()
-    })).required()
+    }))
 });
 
 const examSchema: Schema<IExam> = new Schema({
@@ -20,7 +20,7 @@ const examSchema: Schema<IExam> = new Schema({
         type: String,
         required: true
     },
-    batch: {
+    batchId: {
         type: Schema.Types.ObjectId,
         ref: 'Batch',
         required: true
@@ -28,7 +28,6 @@ const examSchema: Schema<IExam> = new Schema({
     date: {
         type: Date,
         default: Date.now(),
-        required: true
     },
     duration: {
         type: Number,
@@ -43,7 +42,7 @@ const examSchema: Schema<IExam> = new Schema({
         required: true
     },
     results: [{
-        student: {
+        studentId: {
             type: Schema.Types.ObjectId,
             ref: 'User',
             required: true

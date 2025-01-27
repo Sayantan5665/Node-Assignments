@@ -34,11 +34,17 @@ export const auth = async (req: Request, res: Response, next: NextFunction): Pro
   }
 };
 
-export const authorize = (...roles:Array<"admin" | "student" | "teacher">) => {
-  return (req:Request, res:Response, next:NextFunction) => {
+export const authorize = (...roles: Array<"admin" | "student" | "teacher">) => {
+  return (req: Request, res: Response, next: NextFunction) => {
     if (!req.user?.role.role || !roles.includes(req.user.role.role)) {
-      res.status(403).json({ 
-        message: 'You do not have permission to perform this action'
+      let accessString:string = 'You do not have permission to perform this action';
+      if (roles.length > 1) {
+        accessString = `only ${roles.slice(0, -1).join(', ')} and ${roles[roles.length - 1]} have access to perform this action`;
+      } else {
+        accessString = `only ${roles[0]} have access to perform this action`;
+      }
+      res.status(403).json({
+        message: accessString
       });
       return;
     }
