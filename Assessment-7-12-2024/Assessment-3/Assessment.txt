@@ -1,0 +1,95 @@
+3. Assignment: Daily Task To-Do Planner
+=======================================
+    MongoDB Database Schema
+    ------------------------
+        •Collections:
+        •Users
+        •Tasks
+        •Categories
+        •Labels
+        •Reminders
+
+    Required APIs
+    --------------
+        User Management APIs:
+            •User Signup with Email Account Verification
+                •Allow users to sign up by providing:
+                    •Name
+                    •Email
+                    •Password
+                •Send an email verification link to the user upon signup.
+            •User Login
+                •Allow users to log in using their email and password.
+            •Get User Profile
+                •Fetch and display the user's profile details.
+            •Edit User Profile
+                •Update user profile details, including:
+                    •Name
+                    •Email
+                    •Profile picture
+
+        Task Management APIs
+            •Add Task
+                •Create a new task with details:
+                    •Task title
+                    •Description
+                    •Priority (Low, Medium, High)
+                    •Due date and time
+                    •Category ID (optional)
+                    •Labels (optional)
+            •Edit Task
+                •Update task details such as title, description, priority, due date, category, or labels.
+            •Delete Task
+                •Delete a task by its ID.
+            •Mark Task as Completed
+                •Update the status of a task to "Completed."
+            •List Tasks
+                •Fetch all tasks for a user with optional filters:
+                    •By due date (e.g., tasks for today, tomorrow, this week).
+                    •By status (Pending, Completed).
+                    •By category or labels.
+            •Reorder Tasks
+                •Change the order of tasks in the list for prioritization.
+
+        Category and Label APIs
+            •Add Category
+                •Create a new category for grouping tasks.
+                    •E.g., Work, Personal, Fitness
+            •Edit Category
+                •Update category details such as name or description.
+            •Delete Category
+                •Remove a category.
+            •Add Label
+                •Create a custom label for tagging tasks.
+                    •E.g., "Urgent," "Meeting," "Chores"
+            •List Categories and Labels
+                •Fetch all categories and labels for the user.
+
+        Reminder Management APIs
+            •Set Reminder for Task
+                •Add a reminder for a specific task.
+                    •Reminder types:
+                        •Notification at a specific time
+                        •Repeating reminders (e.g., daily, weekly)
+            •Edit Reminder
+                •Update the reminder settings for a task.
+            •Delete Reminder
+                •Remove a reminder for a task.
+
+        Reports and Insights APIs
+            •Task Summary for a Day or Week
+                •Fetch a summary of tasks for a specific day or week, including:
+                    •Total tasks
+                    •Completed tasks
+                    •Pending tasks
+            •Task Statistics
+                •Generate insights on task completion rates:
+                    •Percentage of completed tasks over time.
+                    •Average time to complete tasks.
+            •Send Daily/Weekly Task Summary to Email
+                •Automatically email the user a summary of tasks, including:
+                    •Overdue tasks
+                    •Upcoming tasks
+                    •Completed tasks
+
+==========================================================================================================
