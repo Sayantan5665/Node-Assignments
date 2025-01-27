@@ -1,0 +1,49 @@
+{
+    "swaggerDefinition": {
+        "info": {
+            "title": "REST API for Swagger Documentation",
+            "version": "1.0.0",
+            "description": "REST API for Swagger Documentation",
+            "contact": {
+                "name": "Sayantan",
+                "email": "sayantan-support@yopmail.com"
+            },
+            "servers": [
+                "http://localhost:5502"
+            ]
+        },
+        "host": "localhost:5502",
+        "tags": [
+            {
+                "name": "Auth",
+                "description": "Authentication APIs"
+            },
+            {
+                "name": "Other",
+                "description": "Other APIs"
+            }
+        ],
+        "schemes": [
+            "http",
+            "https"
+        ],
+        "securityDefinitions": {
+            "token": {
+                "type": "apiKey",
+                "name": "x-access-token",
+                "in": "header",
+                "description": "JWT authurization of an API"
+            }
+        },
+        "security": [
+            {
+                "token": []
+            }
+        ]
+    },
+    "apis": [
+        "server.ts",
+        "./app/routes/api/main.routes.ts",
+        "./app/routes/api/*.ts"
+    ]
+}
