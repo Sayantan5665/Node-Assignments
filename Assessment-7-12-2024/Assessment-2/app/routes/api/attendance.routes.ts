@@ -56,72 +56,99 @@ route.post('/mark', auth, authorize('teacher'), attendanceController.markAttenda
 
 /**
  * @swagger
- * /api/batch/assign-students:
- *   post:
- *     summary: Assign student to batches (Admin only)
- *     tags:
- *       - Batches
- *     security:
- *       - token: []
- *     produces:
- *       - application/json
+ * /api/attendance/fetch/of-batch/{batchId}:
+ *   get:
+ *     summary: Fetch attendance of a batch
+ *     tags: 
+ *       - Attendance
+ *     security: []
+ *     produces: application/json
  *     parameters:
- *       - in: body
- *         name: Assign student to batches
- *         description: Assign student to batches.
- *         schema:
- *           type: object
- *           required:
- *             - studentId
- *             - batchId
- *           properties:
- *             studentId:
- *               type: string
- *             batchId:
- *               type: string
+ *       - in: path
+ *         name: batchId
+ *         type: string
+ *         required: true
  *     responses:
- *        200:
- *          description: Successfully assigned student to batch
- *        400:
- *          description: Bad Request
- *        500:
- *          description: Server Error
-*/
-// route.post('/assign-students', auth, authorize('admin'), batchController.assignStudentToBatch);
+ *       200: 
+ *         description: Attendance of the batch fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Attendance of the batch fetched
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Server Error
+ */
+route.get('/fetch/of-batch/:batchId', attendanceController.fetchAttendanceOfRecordsByBatch);
+
 
 /**
  * @swagger
- * /api/batch/remove-students:
- *   post:
- *     summary: Remove student from batches (Admin only)
- *     tags:
- *       - Batches
- *     security:
- *       - token: []
- *     produces:
- *       - application/json
+ * /api/attendance/fetch:
+ *   get:
+ *     summary: Fetch attendance records of a student in a batch
+ *     tags: 
+ *       - Attendance
+ *     security: []
+ *     produces: application/json
  *     parameters:
- *       - in: body
- *         name: Remove student to batches
- *         description: Remove student from batches.
- *         schema:
- *           type: object
- *           required:
- *             - studentId
- *             - batchId
- *           properties:
- *             studentId:
- *               type: string
- *             batchId:
- *               type: string
+ *       - in: query
+ *         name: batchId
+ *         type: string
+ *         required: true
+ *       - in: query
+ *         name: studentId
+ *         type: string
+ *         required: true
  *     responses:
- *        200:
- *          description: Successfully removed student from batch
- *        400:
- *          description: Bad Request
- *        500:
- *          description: Server Error
-*/
-// route.post('/remove-students', auth, authorize('admin'), batchController.removeStudentFromBatch);
+ *       200: 
+ *         description: Attendance of the student fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Attendance of the student fetched
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Server Error
+ */
+route.get('/fetch', attendanceController.getAttendanceRecordsByStudent);
+
+/**
+ * @swagger
+ * /api/attendance/fetch/all:
+ *   get:
+ *     summary: Fetch all attendance records
+ *     tags: 
+ *       - Attendance
+ *     security: []
+ *     produces: application/json
+ *     responses:
+ *       200: 
+ *         description: Attendance fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Attendance fetched
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Server Error
+ */
+route.get('/fetch/all', attendanceController.geAllAttendanceRecords);
+
 
 export default route;

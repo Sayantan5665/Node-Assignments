@@ -45,7 +45,8 @@ class attendanceRepository {
                 });
 
                 const updatedAttendance: IAttendance | null = await attendanceModel.findByIdAndUpdate(existingAttendance._id, existingAttendance, {new: true});
-                return updatedAttendance || {} as IAttendance;
+                if(!updatedAttendance) throw new Error('Failed to update attendance records.');
+                return updatedAttendance;
             }
 
 
@@ -63,24 +64,12 @@ class attendanceRepository {
 
 
 
-    /**
-     * Fetch attendance records by:
-     ** Student (for a specific course or batch).
-     */
-    async getAttendanceRecordsByStudent(studentId: string, batchId?: string): Promise<IAttendance[]> {
+    async getAttendanceRecordsByStudent(studentId: string, batchId: string): Promise<IAttendance[]> {
         try {
             const attendanceRecords: IAttendance[] = await attendanceModel.aggregate([
                 {
                     $match: {
-                        batchId: batchId
-                    }
-                },
-                {
-                    $lookup: {
-                        from: 'batches',
-                        localField: 'batchId',
-                        foreignField: '_id',
-                        as: 'batchInfo'
+                        batchId: new Types.ObjectId(batchId)
                     }
                 },
                 {
@@ -88,31 +77,45 @@ class attendanceRepository {
                 },
                 {
                     $match: {
-                        "records.student": studentId
+                        "records.student": new Types.ObjectId(studentId)
                     }
-                }, {
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'records.student',
+                        foreignField: '_id',
+                        as: 'studentInfo'
+                    }
+                },
+                // unwind the studentInfo in case there is an array
+                {
+                    $unwind: "$studentInfo"
+                },
+                {
                     $project: {
                         date: 1,
-                        student: "$records.student",
+                        studentDetails: {
+                            _id: "$studentInfo._id",
+                            name: "$studentInfo.name",
+                            email: "$studentInfo.email",
+                        },
                         status: "$records.status",
-                        batchInfo: 1
                     }
                 }
-            ])
+            ]);
+            
             return attendanceRecords;
         } catch (error) {
             throw error;
         }
     }
 
-    /**
-    * Fetch attendance records by:
-    ** Batch (view attendance percentage for all students).
-    */
+    
     async getAttendanceOfRecordsByBatch(batchId: string): Promise<IAttendance[]> {
         try {
             const attendancePercentage: IAttendance[] = await attendanceModel.aggregate([
-                { $match: { batchId: batchId } },
+                { $match: { batchId: new Types.ObjectId(batchId) } },
                 { $unwind: "$records" },
                 {
                     $group: {
@@ -151,7 +154,7 @@ class attendanceRepository {
         }
     }
 
-    /*** Get all Records (Admin/Teachers) */
+    
     async geAllAttendanceRecords(): Promise<IAttendance[]> {
         try {
             const attendanceRecords: IAttendance[] = await attendanceModel.aggregate([
@@ -164,14 +167,17 @@ class attendanceRepository {
                     }
                 },
                 {
-                    $unwind: "$records" // Unwind the records array to perform the lookup on each student record
+                    $unwind: "$batchInfo"
+                },
+                {
+                    $unwind: "$records"
                 },
                 {
                     $lookup: {
                         from: 'users',
-                        localField: 'records.student', // Reference the student field in records array
+                        localField: 'records.student', 
                         foreignField: '_id',
-                        as: 'studentInfo', // Renamed the field to avoid collision with the `records` array
+                        as: 'studentInfo',
                     }
                 },
                 {
@@ -181,7 +187,27 @@ class attendanceRepository {
                         date: { $first: "$date" },
                         markedBy: { $first: "$markedBy" },
                         batchInfo: { $first: "$batchInfo" },
-                        records: { $push: { student: "$studentInfo", status: "$records.status" } }, // Rebuild the records array
+                        records: {  // Rebuild the records array
+                            $push: { 
+                                student: {
+                                    $arrayElemAt: [
+                                        {
+                                            $map:{
+                                                input: "$studentInfo",
+                                                as: "student",
+                                                in: {
+                                                    _id: "$$student._id",
+                                                    name: "$$student.name",
+                                                    email: "$$student.email",
+                                                }
+                                            }
+                                        }, 
+                                        0
+                                    ]
+                                }, 
+                                status: "$records.status" 
+                            } 
+                        },
                     }
                 },
                 {
@@ -193,9 +219,24 @@ class attendanceRepository {
                     }
                 },
                 {
+                    $unwind: "$markedByInfo"
+                },
+                {
                     $project: {
-                        batchInfo: 1,
-                        markedByInfo: 1,
+                        batchInfo: {
+                            _id: 1,
+                            name: 1,
+                            courseId: 1,
+                            teacherId: 1,
+                            startDate: 1,
+                            endDate: 1,
+                            isActive: 1,
+                        },
+                        markedByInfo: {
+                            _id: 1,
+                            name: 1,
+                            email: 1,
+                        },
                         date: 1,
                         records: 1,
                     }
