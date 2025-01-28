@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { comparePassword, generateToken, hashPassword, sendVerificationEmail, verifyToken } from "@utils";
+import { comparePassword, deleteUploadedFile, generateToken, hashPassword, sendVerificationEmail, verifyToken } from "@utils";
 import { IUser, IMailOptions, IVerificationToken, ITokenUser, IRole } from "@interfaces";
 import { userModel, userValidator } from "../models/user.model";
 import { verify } from "jsonwebtoken";
@@ -100,16 +100,15 @@ class userRepo {
         ]);
     }
 
-    async addUser(req: Request, body: any, token?: string): Promise<IUser> {
+    async addUser(req: Request, body: any): Promise<IUser> {
         try {
-            // if(token?.length) {
-            // const creator: ITokenUser = verify(token, process.env.JWT_SECRET!) as ITokenUser;
-            // if (!(creator?.role === 'super-admin')) {;
-            //     throw new Error(`Only super admins can create ${body.role}`);
-            // }
-            // } else {
-            //     throw new Error(`Token is not provided!`);
-            // }
+            const file: any = req.file || (req?.files as any || [])[0];
+            const basePath: string = `${req.protocol}://${req.get('host')}`;
+            let imagePath: string = `${basePath}/uploads/blank-profile-pic.jpg`;
+            if (file) {
+                imagePath = `${basePath}/uploads/${file.filename}`;
+            }
+            body.image = imagePath;
 
             const existUser: IUser | null = await this.findOneBy({email: body.email});
             if (existUser) {
@@ -135,15 +134,6 @@ class userRepo {
                     }
                 } 
             } else  body['role'] = '67850496d40709a6b61e69e7';  // by default user role
-
-            const file: any = req.file || (req?.files as any || [])[0];
-            const basePath: string = `${req.protocol}://${req.get('host')}`;
-            let imagePath: string = `${basePath}/uploads/blank-profile-pic.jpg`;
-            if (file) {
-                imagePath = `${basePath}/uploads/${file.filename}`;
-                // console.log("imagePath: ", imagePath);
-            }
-            body.image = imagePath;
 
             const { error } = userValidator.validate(body);
             if (error) {
@@ -171,6 +161,8 @@ class userRepo {
             const newUser: IUser = await data.save();
             return newUser;
         } catch (error) {
+            const file: any = req.file || (req?.files as any || [])[0];
+            deleteUploadedFile(file.filename, 'blank-profile-pic.jpg');
             throw error
         }
     }
@@ -244,6 +236,8 @@ class userRepo {
             const user: IUser = await userModel.findByIdAndUpdate(userId, body, { new: true }).select('-isActive -isVarified -updated_at -password');
             return user;
         } catch (error) {
+            const file: any = req.file || (req?.files as any || [])[0];
+            deleteUploadedFile(file.filename, 'blank-profile-pic.jpg');
             throw error;
         }
     }
