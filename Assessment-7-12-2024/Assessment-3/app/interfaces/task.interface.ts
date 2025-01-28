@@ -13,7 +13,6 @@ export interface ITask extends Document {
     labels?: Array<Types.ObjectId>;
     order: number;
     status: 'pending' | 'complete';
-    reminderId: Types.ObjectId;
     location?: string;
     color: string;
     isActive: boolean;
@@ -28,7 +27,7 @@ export interface ICategory extends Document {
 export interface IReminder extends Document {
     userId: Types.ObjectId;
     taskId: Types.ObjectId;
-    type: 'once' | 'every week' | 'every month' | 'every year';
+    type: 'no repeat' | 'every week' | 'every month' | 'every year';
     remindBefore: number; //in minutes
 }
 
