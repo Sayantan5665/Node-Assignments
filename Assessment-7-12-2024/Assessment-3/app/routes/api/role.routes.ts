@@ -7,7 +7,7 @@ const route = Router();
  * @swagger
  * /api/user/role/create:
  *   post:
- *     summary: Create Roles
+ *     summary: Create Roles (Admin only)
  *     tags:
  *       - Auth
  *     security:
@@ -77,7 +77,7 @@ route.get('/fetch', auth, roleController.getRoles);
  * @swagger
  * /api/user/role/delete/{id}:
  *   delete:
- *     summary: Delete roles
+ *     summary: Delete roles (Admin only)
  *     tags: 
  *       - Auth
  *     security:

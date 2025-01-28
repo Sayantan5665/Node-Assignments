@@ -133,7 +133,7 @@ class userRepo {
                         body['role'] = (role._id as any).toString();
                     }
                 } 
-            } else  body['role'] = '67850496d40709a6b61e69e7';  // by default user role
+            } else  body['role'] = '67987a613c3a3dcdd50c0189';  // by default user role
 
             const { error } = userValidator.validate(body);
             if (error) {
@@ -232,6 +232,8 @@ class userRepo {
                     });
                 }
             }
+
+            body.role && delete body.role;
 
             const user: IUser = await userModel.findByIdAndUpdate(userId, body, { new: true }).select('-isActive -isVarified -updated_at -password');
             return user;

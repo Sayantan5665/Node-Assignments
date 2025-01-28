@@ -19,8 +19,20 @@
                 "description": "Authentication APIs"
             },
             {
-                "name": "Other",
-                "description": "Other APIs"
+                "name": "Category",
+                "description": "Category APIs"
+            },
+            {
+                "name": "Label",
+                "description": "Label APIs"
+            },
+            {
+                "name": "Task",
+                "description": "Task APIs"
+            },
+            {
+                "name": "Reminder",
+                "description": "Reminder APIs"
             }
         ],
         "schemes": [
