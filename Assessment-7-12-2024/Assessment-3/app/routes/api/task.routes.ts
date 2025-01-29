@@ -368,7 +368,7 @@ route.delete('/delete/:id', auth, taskController.deleteTask);
  *       500:
  *         description: Server Error
  */
-route.put('/edit/:id', auth, taskController.markTaskAsPending);
+route.put('/mark-pending/:id', auth, taskController.markTaskAsPending);
 
 /**
  * @swagger
@@ -401,7 +401,7 @@ route.put('/edit/:id', auth, taskController.markTaskAsPending);
  *       500:
  *         description: Server Error
  */
-route.put('/edit/:id', auth, taskController.markTaskAsCompleted);
+route.put('/mark-completed/:id', auth, taskController.markTaskAsCompleted);
 
 
 export default route;

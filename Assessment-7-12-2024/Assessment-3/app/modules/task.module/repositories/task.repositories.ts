@@ -86,9 +86,6 @@ class taskRepo {
 
     async updateTask(user: ITokenUser, task: ITask, taskId: Types.ObjectId, body: ITask): Promise<ITask> {
         try {
-            const updatedCategory: ITask | null = await taskModel.findOneAndUpdate({ isActive: true, _id: taskId, user: user.id }, body, { new: true });
-            if (!updatedCategory) throw new Error('Something went wrong when updating task');
-
             if (body.order) {
                 // If order is being updated
                 if (body.order !== task.order) {
@@ -98,18 +95,18 @@ class taskRepo {
                     // Update other tasks' orders
                     if (oldOrder < newOrder) {
                         // Moving task down: decrease order of tasks between old and new position
-                        await taskModel.updateMany(
+                        const x = await taskModel.updateMany(
                             {
-                                user: user.id,
+                                userId: user.id,
                                 order: { $gt: oldOrder, $lte: newOrder }
                             },
                             { $inc: { order: -1 } }
                         );
                     } else {
                         // Moving task up: increase order of tasks between new and old position
-                        await taskModel.updateMany(
+                        const y = await taskModel.updateMany(
                             {
-                                user: user.id,
+                                userId: user.id,
                                 order: { $gte: newOrder, $lt: oldOrder }
                             },
                             { $inc: { order: 1 } }
@@ -117,6 +114,9 @@ class taskRepo {
                     }
                 }
             }
+
+            const updatedCategory: ITask | null = await taskModel.findOneAndUpdate({ isActive: true, _id: taskId, userId: user.id }, body, { new: true });
+            if (!updatedCategory) throw new Error('Something went wrong when updating task');
 
             return updatedCategory;
         } catch (error) {
@@ -126,15 +126,16 @@ class taskRepo {
 
     async deleteTask(user: ITokenUser, taskId: Types.ObjectId): Promise<any> {
         try {
-            await taskModel.findOneAndUpdate({ isActive: true, _id: taskId, user: user.id }, {isActive: false});
+            await taskModel.findOneAndUpdate({ isActive: true, _id: taskId, userId: user.id }, { isActive: false });
         } catch (error) {
             throw error;
         }
     }
 
-    async markTask(user: ITokenUser, taskId: Types.ObjectId, as: 'pending' | 'complete'):Promise<any> {
+    async markTask(user: ITokenUser, taskId: Types.ObjectId, as: 'pending' | 'complete'): Promise<ITask | null> {
         try {
-            await taskModel.findOneAndUpdate({ isActive: true, _id: taskId, user: user.id }, { status: as });
+            const markedTask: ITask | null = await taskModel.findOneAndUpdate({ isActive: true, _id: taskId, userId: user.id }, { status: as }, { new: true });
+            return markedTask;
         } catch (error) {
             throw error;
         }

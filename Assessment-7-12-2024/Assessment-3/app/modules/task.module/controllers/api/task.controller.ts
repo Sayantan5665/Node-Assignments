@@ -188,7 +188,7 @@ class taskController {
                 });
             }
 
-            if (task.user._id.toString() !== user.id) {
+            if (task.userId.toString() !== user.id) {
                 return res.status(401).json({
                     status: 401,
                     message: 'You cannot perform this action',
@@ -266,7 +266,7 @@ class taskController {
             const user: ITokenUser = req.user!;
             const taskId = req.params.id;
 
-            const task: any = (await taskRepo.fetchTask({ isActive: true, _id: new Types.ObjectId(taskId), userId: new Types.ObjectId(user.id) }))[0];
+            const task: ITask | undefined | null = (await taskRepo.fetchTask({ isActive: true, _id: new Types.ObjectId(taskId), userId: new Types.ObjectId(user.id) }))[0];
             if (!task) {
                 return res.status(404).json({
                     status: 404,
@@ -274,11 +274,27 @@ class taskController {
                 });
             }
 
-            await taskRepo.markTask(user, new Types.ObjectId(taskId), 'complete');
+            const isTaskCompleted: ITask | undefined | null = (await taskRepo.fetchTask({ isActive: true, _id: new Types.ObjectId(taskId), userId: new Types.ObjectId(user.id), status: 'complete' }))[0];
+            if (isTaskCompleted) {
+                return res.status(404).json({
+                    status: 404,
+                    message: 'Task is already completed!',
+                });
+            }
+
+            const markedTask: ITask | null = await taskRepo.markTask(user, new Types.ObjectId(taskId), 'complete');
+            if (!markedTask) {
+                return res.status(400).json({
+                    status: 400,
+                    message: 'Task not found!',
+                    data: isTaskCompleted
+                });
+            }
 
             return res.status(200).json({
                 status: 200,
-                message: 'Task marked as completed!'
+                message: 'Task marked as completed!',
+                data: markedTask
             });
         } catch (error: any) {
             console.log("error: ", error);
@@ -304,11 +320,27 @@ class taskController {
                 });
             }
 
-            await taskRepo.markTask(user, new Types.ObjectId(taskId), 'pending');
+            const isTaskPending: ITask | undefined | null = (await taskRepo.fetchTask({ isActive: true, _id: new Types.ObjectId(taskId), userId: new Types.ObjectId(user.id), status: 'pending' }))[0];
+            if (isTaskPending) {
+                return res.status(404).json({
+                    status: 404,
+                    message: 'Task is already marked as pending!',
+                    data: isTaskPending
+                });
+            }
+
+            const markedTask: ITask | null = await taskRepo.markTask(user, new Types.ObjectId(taskId), 'pending');
+            if (!markedTask) {
+                return res.status(400).json({
+                    status: 400,
+                    message: 'Task not found!',
+                });
+            }
 
             return res.status(200).json({
                 status: 200,
-                message: 'Task marked as pending!'
+                message: 'Task marked as pending!',
+                data: markedTask
             });
         } catch (error: any) {
             console.log("error: ", error);
