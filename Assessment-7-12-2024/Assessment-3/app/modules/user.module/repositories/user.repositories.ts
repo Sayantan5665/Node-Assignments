@@ -268,6 +268,32 @@ class userRepo {
             throw error;
         }
     }
+
+    async getUserById(id: string): Promise<IUser | null> {
+        try {
+            const userId = new Types.ObjectId(id);
+
+            const users: Array<IUser | null> = await userModel.aggregate([
+                {
+                    $match: {
+                        _id: userId,
+                        isActive: true
+                    }
+                },
+                {
+                    $project: {
+                        "isActive": 0,
+                        "isVarified": 0,
+                        "updatedAt": 0,
+                        "password": 0
+                    }
+                }
+            ])
+            return users.length > 0 ? users[0] : null;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 export default new userRepo();

@@ -5,7 +5,7 @@ export interface ITask extends Document {
     title: string;
     description: string;
     priority: 'low' | 'medium' | 'high';
-    Due: {
+    due: {
         date: Date,
         time: string
     }
@@ -14,7 +14,6 @@ export interface ITask extends Document {
     order: number;
     status: 'pending' | 'complete';
     location?: string;
-    color: string;
     isActive: boolean;
 }
 
