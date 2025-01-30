@@ -4,6 +4,7 @@ import roleRouter from "./api/role.routes";
 import categoryRouter from "./api/category.routes";
 import labelRouter from "./api/label.routes";
 import taskRouter from "./api/task.routes";
+import reminderRouter from "./api/reminder.routes";
 
 const router = Router();
 
@@ -12,5 +13,6 @@ router.use("/api/user/role", roleRouter);
 router.use("/api/category", categoryRouter);
 router.use("/api/label", labelRouter);
 router.use("/api/task", taskRouter);
+router.use("/api/reminder", reminderRouter);
 
 export default router;

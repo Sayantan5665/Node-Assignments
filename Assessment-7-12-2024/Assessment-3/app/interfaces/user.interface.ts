@@ -27,13 +27,6 @@ export interface ITokenUser {
     timeZone?: string;
 }
 
-export interface IMailOptions {
-    from: string;
-    to: string;
-    subject: string;
-    html: string;
-}
-
 export interface IVerificationToken {
     email: string;
 }
