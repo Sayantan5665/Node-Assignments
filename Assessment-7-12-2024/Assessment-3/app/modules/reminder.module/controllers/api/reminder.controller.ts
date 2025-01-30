@@ -30,6 +30,13 @@ class reminderController {
                 });
             }
 
+            if(task?.reminder) {
+                return res.status(404).json({
+                    status: 402,
+                    message: 'There is already a reminder added to this task.',
+                });
+            }
+
             const reminder: IReminder = await reminderRepo.addReminder(body);
             res.status(200).json({
                 status: 200,

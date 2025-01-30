@@ -50,6 +50,20 @@ class taskRepo {
                     }
                 },
                 {
+                    $lookup: {
+                        from: "reminders",
+                        localField: "_id",
+                        foreignField: "taskId",
+                        as: "reminder"
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$reminder",
+                        preserveNullAndEmptyArrays: true
+                    }
+                },
+                {
                     $project: {
                         _id: 1,
                         userId: 1,
@@ -67,6 +81,11 @@ class taskRepo {
                             title: 1,
                             description: 1,
                             color: 1
+                        },
+                        reminder: {
+                            _id: 1,
+                            type: 1,
+                            remindBefore: 1
                         },
                         status: 1,
                         order: 1,
