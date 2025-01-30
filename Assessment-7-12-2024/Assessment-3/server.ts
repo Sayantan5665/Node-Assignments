@@ -9,6 +9,7 @@ import routes from '@routes';
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
 import SwaggerOptions from './swagger.json';
+import { startAgenda } from "@utils";
 const swaggerDocument = swaggerJSDoc(SwaggerOptions as any);
 
 // Initialize Express app
@@ -19,6 +20,9 @@ config();
 
 // Connect to MongoDB
 connectDB();
+
+// start agenda for remindernotification/email
+startAgenda();
 
 // Middleware to parse JSON and URL-encoded data
 app.use(json());

@@ -67,7 +67,7 @@ class courseRepository {
      */
     async updateCourse(id: string, body: ICourse): Promise<ICourse | null> {
         try {
-            body.isActive && delete body.isActive;
+            body.isActive?.toString()?.length && delete body.isActive;
             const updatedCourse: ICourse | null = await courseModel.findByIdAndUpdate(id, body, { new: true });
             return updatedCourse ? updatedCourse : null;
         } catch (error) {

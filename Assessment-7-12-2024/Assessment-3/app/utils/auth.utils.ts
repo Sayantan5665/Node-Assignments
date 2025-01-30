@@ -3,8 +3,6 @@ import { compare, genSaltSync, hashSync } from "bcryptjs";
 import { ITokenUser, IVerificationToken } from "../interfaces/user.interface";
 
 
-
-
 export const hashPassword = async (password: string): Promise<string> => {
     try {
         const salt = genSaltSync(10);

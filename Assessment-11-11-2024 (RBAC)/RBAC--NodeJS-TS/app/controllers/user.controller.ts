@@ -200,7 +200,7 @@ class userController {
             body.password && delete body.password;
             body.role && delete body.role;
             body.isVarified && delete body.isVarified;
-            body.isActive && delete body.isActive;
+            body.isActive?.toString()?.length && delete body.isActive;
 
             const existingUser = await userModel.findById(userId).select('-isActive -isVarified');
 

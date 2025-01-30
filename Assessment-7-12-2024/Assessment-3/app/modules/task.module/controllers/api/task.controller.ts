@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
 import taskRepo from "../../repositories/task.repositories";
-import { ICategory, ILabel, ITask, ITokenUser, IUser } from "@interfaces";
+import { ICategory, ILabel, IReminder, ITask, ITokenUser, IUser } from "@interfaces";
 import categoryRepo from "app/modules/category.module/repositories/category.repositories";
 import { Types } from "mongoose";
 import labelRepo from "app/modules/label.module/repositories/label.repositories";
+import reminderRepo from "app/modules/reminder.module/repositories/reminder.repositories";
+import { agenda } from "@utils";
 
 class taskController {
     /*** (User themselves only) */
@@ -215,6 +217,30 @@ class taskController {
 
             const updatedTask: ITask = await taskRepo.updateTask(user, task, new Types.ObjectId(taskId), body);
 
+            // If due time was changed, update the reminder
+            if (body.due && new Date(new Date(body.due.date).toLocaleDateString() + '-' + body.due.time).getTime() !== new Date(new Date(task.due.date).toLocaleDateString() + '-' + task.due.time).getTime()) {
+
+                // Find the associated reminder
+                const reminder = (await reminderRepo.fetchReminder({isActive: true, taskId: new Types.ObjectId(taskId)}))[0];
+
+                if (reminder) {
+                    // Cancel the old reminder job in Agenda
+                    await agenda.cancel({ "data.reminderId": reminder._id });
+
+                    // Calculate new reminder time
+                    const newReminderTime = new Date(new Date(new Date(body.due.date).toLocaleDateString() + '-' + body.due.time).getTime() - reminder.remindBefore * 60 * 1000);
+
+                    if (newReminderTime > new Date()) {
+                        // Schedule a new reminder job
+                        await agenda.schedule(newReminderTime, "send reminder email", { reminderId: reminder._id });
+                        console.log(`Rescheduled reminder for task ${taskId} at ${newReminderTime}`);
+                    } else {
+                        console.log(`New reminder time is in the past, sending email immediately.`);
+                        await agenda.now("send reminder email", { reminderId: reminder._id });
+                    }
+                }
+            }
+
             res.status(200).json({
                 status: 200,
                 message: notFoundLabel?.length ? `Task updated successfully! We could not find ${notFoundLabel.length} labels.` : 'Task updated successfully!',
@@ -242,6 +268,13 @@ class taskController {
                     status: 404,
                     message: 'Task not found!',
                 });
+            }
+
+            const reminder: any = (await reminderRepo.fetchReminder({ isActive: false, taskId: new Types.ObjectId(taskId), userId: new Types.ObjectId(user.id) }))[0];
+            if (!reminder) {
+                console.log("Reminder not found");
+            } else {
+                await reminderRepo.deleteReminder(new Types.ObjectId(reminder._id as string), new Types.ObjectId(taskId), new Types.ObjectId(user.id));
             }
 
             await taskRepo.deleteTask(user, new Types.ObjectId(taskId));

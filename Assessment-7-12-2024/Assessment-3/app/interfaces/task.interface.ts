@@ -28,6 +28,7 @@ export interface IReminder extends Document {
     taskId: Types.ObjectId;
     type: 'no repeat' | 'every week' | 'every month' | 'every year';
     remindBefore: number; //in minutes
+    isActive: boolean;
 }
 
 export interface ILabel extends Document {

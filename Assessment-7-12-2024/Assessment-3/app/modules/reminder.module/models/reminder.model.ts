@@ -7,7 +7,8 @@ const reminderValidator: ObjectSchema<IReminder> = joi.object({
     userId: joi.string().required(),
     taskId: joi.string().required(),
     type: joi.string().required(),
-    remindBefore: joi.number().required()  //in minutes
+    remindBefore: joi.number().required(),  //in minutes
+    isActive: joi.boolean()
 });
 
 const reminderSchema: Schema<IReminder> = new Schema({
@@ -29,6 +30,10 @@ const reminderSchema: Schema<IReminder> = new Schema({
     remindBefore: {
         type: Number,
         required: true
+    },
+    isActive: {
+        type: Boolean,
+        default: true
     }
 }, { timestamps: true, versionKey: false });
 

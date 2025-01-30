@@ -16,7 +16,7 @@ class taskRepo {
         }
     }
 
-    async fetchReminder(matchConditions: { userId: Types.ObjectId } & Record<string, any>): Promise<Array<IReminder>> {
+    async fetchReminder(matchConditions: { isActive: boolean } & Record<string, any>): Promise<Array<any>> {
         try {
             const reminders: Array<IReminder> = await reminderModel.aggregate([
                 {
@@ -72,6 +72,7 @@ class taskRepo {
                         },
                         type: 1,
                         remindBefore: 1,
+                        isActive: 1
                     }
                 }
             ]);
@@ -84,8 +85,19 @@ class taskRepo {
 
     async updateReminder(reminderId: Types.ObjectId, body: IReminder): Promise<IReminder | null> {
         try {
-            const updatedCategory: IReminder | null = await reminderModel.findOneAndUpdate({ _id: reminderId, userId: new Types.ObjectId(body.userId), taskId: new Types.ObjectId(body.taskId) }, body, { new: true });
-            return updatedCategory;
+            const updatedReminder: IReminder | null = await reminderModel.findOneAndUpdate({ _id: reminderId, userId: new Types.ObjectId(body.userId), taskId: new Types.ObjectId(body.taskId) }, body, { new: true });
+            return updatedReminder;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async deleteReminder(reminderId: Types.ObjectId, taskId: Types.ObjectId, userId: Types.ObjectId): Promise<any> {
+        try {
+            const deletedReminder: IReminder | null = await reminderModel.findOneAndUpdate({ _id: reminderId, userId: userId, taskId: taskId }, { isActive: false }, { new: true });
+            if (!deletedReminder) {
+                throw new Error('Reminder not found');
+            }
         } catch (error) {
             throw error;
         }
