@@ -218,7 +218,7 @@ class taskController {
             const updatedTask: ITask = await taskRepo.updateTask(user, task, new Types.ObjectId(taskId), body);
 
             // If due time was changed, update the reminder
-            if (body.due && new Date(new Date(body.due.date).toLocaleDateString() + '-' + body.due.time).getTime() !== new Date(new Date(task.due.date).toLocaleDateString() + '-' + task.due.time).getTime()) {
+            if (body.due && new Date(new Date(body.due.date).toDateString() + '-' + body.due.time).getTime() !== new Date(new Date(task.due.date).toDateString() + '-' + task.due.time).getTime()) {
 
                 // Find the associated reminder
                 const reminder = (await reminderRepo.fetchReminder({isActive: true, taskId: new Types.ObjectId(taskId)}))[0];
@@ -228,16 +228,41 @@ class taskController {
                     await agenda.cancel({ "data.reminderId": reminder._id });
 
                     // Calculate new reminder time
-                    const newReminderTime = new Date(new Date(new Date(body.due.date).toLocaleDateString() + '-' + body.due.time).getTime() - reminder.remindBefore * 60 * 1000);
+                    const newReminderTime = new Date(new Date(new Date(body.due.date).toDateString() + '-' + body.due.time).getTime() - reminder.remindBefore * 60 * 1000);
 
                     if (newReminderTime > new Date()) {
-                        // Schedule a new reminder job
-                        await agenda.schedule(newReminderTime, "send reminder email", { reminderId: reminder._id });
+                        switch (reminder.type) {
+                            case "no repeat":
+                                await agenda.schedule(newReminderTime, "send-reminder-email", { reminderId: reminder._id });
+                                break;
+                        
+                            case "every week":
+                                await agenda.create("send-reminder-email", { reminderId: reminder._id })
+                                    .repeatAt(newReminderTime.toISOString()) // First execution at newReminderTime
+                                    .repeatEvery("1 week") // Repeat every week
+                                    .save();
+                                break;
+                        
+                            case "every month":
+                                await agenda.create("send-reminder-email", { reminderId: reminder._id })
+                                    .repeatAt(newReminderTime.toISOString())
+                                    .repeatEvery("1 month")
+                                    .save();
+                                break;
+                        
+                            case "every year":
+                                await agenda.create("send-reminder-email", { reminderId: reminder._id })
+                                    .repeatAt(newReminderTime.toISOString())
+                                    .repeatEvery("1 year")
+                                    .save();
+                                break;
+                        }
                         console.log(`Rescheduled reminder for task ${taskId} at ${newReminderTime}`);
-                    } else {
-                        console.log(`New reminder time is in the past, sending email immediately.`);
-                        await agenda.now("send reminder email", { reminderId: reminder._id });
-                    }
+                    } 
+                    // else {
+                    //     console.log(`New reminder time is in the past, sending email immediately.`);
+                    //     await agenda.now("send-reminder-email", { reminderId: reminder._id });
+                    // }
                 }
             }
 
