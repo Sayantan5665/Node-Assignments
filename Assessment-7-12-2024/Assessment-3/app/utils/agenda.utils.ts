@@ -11,7 +11,6 @@ const MONGO_USER = process.env.MONGO_USER;
 const MONGO_PASS = process.env.MONGO_PASS;
 const MONGO_NAME = process.env.MONGO_NAME;
 const mongodb_uri: string = 'mongodb+srv://'+MONGO_USER+':'+MONGO_PASS+'@cluster0.wmkkeag.mongodb.net/'+MONGO_NAME;
-console.log("mongodb_uri: ", mongodb_uri);
 
 const agenda = new Agenda({
     db: { address: mongodb_uri, collection: "reminder-notification-agenda" }
